@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollux Gronier | Engineer & Data Scientist</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+    <style>
+        :root { 
+            --bg-deep: #030005;
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --glass-surface: rgba(20, 20, 25, 0.7);
+        }
+        
+        body { 
+            background-color: var(--bg-deep); 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            margin: 0; 
+        }
+
+        /* --- BACKGROUND --- */
+        #canvas-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0a0a12 0%, #000000 100%);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .orbitron { font-family: 'Orbitron', sans-serif; letter-spacing: 0.05em; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .glitch-title {
+            font-size: clamp(3.5rem, 9vw, 7rem);
+            font-weight: 900;
+            line-height: 1;
+            color: white;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            position: relative;
+        }
+
+        /* --- HOLOGRAPHIC CARDS --- */
+        .holo-card {
+            background: var(--glass-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        /* The glowing border effect */
+        .holo-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+            transition: 0.5s; pointer-events: none;
+        }
+        .holo-card:hover::before { left: 100%; }
+        
+        .holo-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-neon {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 12px 28px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-neon:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* --- TIMELINE --- */
+        .timeline-box {
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            padding-left: 2rem;
+            position: relative;
+            padding-bottom: 3rem;
+        }
+        .timeline-box:last-child { border-left: 2px solid transparent; }
+        
+        .timeline-dot {
+            position: absolute; left: -9px; top: 0;
+            width: 16px; height: 16px;
+            background: #000;
+            border: 2px solid var(--neon-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--neon-purple);
+            transition: 0.3s;
+        }
+        .timeline-box:hover .timeline-dot {
+            background: var(--neon-purple);
+            box-shadow: 0 0 25px var(--neon-purple);
+            transform: scale(1.3);
+        }
+
+        /* --- SKILLS --- */
+        .tech-pill {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            margin: 0.25rem;
+            transition: 0.3s;
+        }
+        .tech-pill:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-blue); }
+    </style>
+</head>
+
+<body>
+
+    <div id="canvas-container"><canvas id="canvas"></canvas></div>
+
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 bg-[#030005]/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20">
+                    <img src="assets/img/profile-pic.JPG" alt="Profile" class="w-full h-full object-cover">
+                </div>
+                <a href="#" class="orbitron font-bold text-lg text-white tracking-wider">POLLUX<span style="color:var(--neon-blue)">.G</span></a>
+            </div>
+
+            <div class="hidden md:flex gap-8">
+                <a href="#about" class="text-sm font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors">Profile</a>
+                <a href="#journey" class="text-sm font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors">Journey</a>
+                <a href="#work" class="text-sm font-bold uppercase tracking-widest hover:text-cyan-400 transition-colors">Work</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="flex text-xs font-bold gap-2">
+                    <span class="cursor-pointer text-cyan-400" onclick="app.setLang('en')">EN</span>
+                    <span class="opacity-30">/</span>
+                    <span class="cursor-pointer hover:text-white" onclick="app.setLang('fr')">FR</span>
+                </div>
+                <a href="assets/pdf/cv_pollux_gronier.pdf" class="border border-white/30 px-4 py-2 text-xs font-bold uppercase hover:bg-white hover:text-black transition-all">CV</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-20">
+        <div class="mb-6 opacity-0 fade-in">
+            <span class="mono text-xs text-cyan-400 border border-cyan-500/30 bg-cyan-500/10 px-3 py-1">DATA SCIENTIST</span>
+        </div>
+        
+        <h1 class="glitch-title orbitron mb-6 opacity-0 fade-in" style="animation-delay: 0.2s">
+            POLLUX<br>GRONIER
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-12 font-light opacity-0 fade-in" style="animation-delay: 0.4s" data-i18n="hero_sub">
+            Engineering <span style="color:var(--neon-purple)">//</span> AI & Data Science <span style="color:var(--neon-purple)">//</span> Strategy
+        </p>
+
+        <div class="flex gap-6 opacity-0 fade-in" style="animation-delay: 0.6s">
+            <a href="#work" class="btn-neon" data-i18n="btn_work">View Projects</a>
+            <a href="#contact" class="px-8 py-3 text-sm font-bold uppercase tracking-widest hover:text-white text-gray-400 border-b border-transparent hover:border-white transition-all" data-i18n="btn_contact">Contact</a>
+        </div>
+    </section>
+
+    <section id="about" class="py-32 px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            
+            <div class="relative group">
+                <div class="absolute -inset-2 bg-gradient-to-r from-cyan-500 to-purple-600 opacity-30 blur-lg group-hover:opacity-60 transition duration-500"></div>
+                <div class="relative bg-black p-1 border border-white/10">
+                    <img src="assets/img/profile-pic.JPG" alt="Pollux" class="w-full grayscale group-hover:grayscale-0 transition-all duration-700 block">
+                    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <h2 class="text-4xl font-bold orbitron text-white" data-i18n="about_title">Engineer & <span style="color:var(--neon-blue)">Athlete.</span></h2>
+                
+                <div class="text-gray-300 text-lg space-y-4 leading-relaxed font-light" data-i18n="about_text">
+                    <p>I am a 19-year-old Dual Bachelor student at <strong>CentraleSupélec & ESSEC</strong>. My background is forged by high-performance sports (Gymnastics) and extreme academic rigor.</p>
+                    <p>My mission: bridging the gap between <strong>complex algorithms</strong> and <strong>business strategy</strong>. I don't just code; I build solutions that impact the real economy.</p>
+                </div>
+
+                <div class="pt-4">
+                    <h4 class="mono text-xs text-purple-400 mb-4">/// TECH STACK</h4>
+                    <div>
+                        <span class="tech-pill">Python</span>
+                        <span class="tech-pill">TensorFlow</span>
+                        <span class="tech-pill">Scikit-Learn</span>
+                        <span class="tech-pill">SQL</span>
+                        <span class="tech-pill">Bloomberg</span>
+                        <span class="tech-pill">Git</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="journey" class="py-32 px-6 bg-white/5">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold orbitron mb-16 text-white" data-i18n="path_title">My Journey</h2>
+            
+            <div class="pl-4">
+                <div class="timeline-box">
+                    <div class="timeline-dot"></div>
+                    <span class="mono text-xs text-cyan-400 mb-2 block">2024 — 2028</span>
+                    <h3 class="text-xl font-bold text-white mb-1">CentraleSupélec & ESSEC</h3>
+                    <p class="text-gray-400 text-sm">BSc AIDAMS (AI, Data & Management)</p>
+                    <p class="text-gray-500 text-sm mt-2" data-i18n="path_1">Double degree of excellence. Tech Club & Kryptosphere member.</p>
+                </div>
+
+                <div class="timeline-box">
+                    <div class="timeline-dot"></div>
+                    <span class="mono text-xs text-gray-500 mb-2 block">2023 — 2024</span>
+                    <h3 class="text-xl font-bold text-white mb-1">Lycée Saint Joseph</h3>
+                    <p class="text-gray-400 text-sm">Baccalauréat Scientifique</p>
+                    <p class="text-gray-500 text-sm mt-2" data-i18n="path_2">Math & Physics. Graduated with Honors.</p>
+                </div>
+
+                <div class="timeline-box">
+                    <div class="timeline-dot"></div>
+                    <span class="mono text-xs text-gray-500 mb-2 block">2022 — 2023</span>
+                    <h3 class="text-xl font-bold text-white mb-1">Delview Secondary (Vancouver)</h3>
+                    <p class="text-gray-400 text-sm">International Immersion</p>
+                    <p class="text-gray-500 text-sm mt-2" data-i18n="path_3">Statistical Modeling & English Fluency.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-end justify-between mb-20">
+                <h2 class="text-4xl font-bold orbitron text-white" data-i18n="work_title">Selected Projects</h2>
+                <span class="hidden md:block mono text-xs text-gray-500">GITHUB REPOSITORIES_</span>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-container">
+                </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="py-20 border-t border-white/10 text-center bg-black">
+        <h2 class="text-3xl font-bold orbitron mb-8" data-i18n="contact_title">LET'S CONNECT</h2>
+        <a href="mailto:Polluxgronier@yahoo.com" class="text-xl mono text-cyan-400 hover:text-white transition-colors">Polluxgronier@yahoo.com</a>
+        
+        <div class="flex justify-center gap-8 mt-12">
+            <a href="https://github.com/polluxgnr" target="_blank" class="text-xs font-bold text-gray-500 hover:text-white uppercase tracking-widest">GitHub</a>
+            <a href="https://linkedin.com/" target="_blank" class="text-xs font-bold text-gray-500 hover:text-white uppercase tracking-widest">LinkedIn</a>
+        </div>
+        <p class="mt-16 text-[10px] text-gray-800 mono">PARIS • © 2026 POLLUX GRONIER</p>
+    </footer>
+
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="app.closeModal()"></div>
+        <div class="holo-card w-full max-w-2xl relative z-10 p-10 bg-[#0a0a10]" id="modal-box">
+            <button onclick="app.closeModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white text-2xl">&times;</button>
+            <span id="modal-tag" class="mono text-xs text-cyan-400 border border-cyan-500/30 px-2 py-1">PROJECT</span>
+            <h2 id="modal-title" class="text-3xl font-bold text-white mb-6 mt-4 orbitron">Title</h2>
+            <div id="modal-body" class="text-gray-300 space-y-4 leading-relaxed font-light"></div>
+            <a href="https://github.com/polluxgnr" target="_blank" class="inline-block mt-8 btn-neon text-xs">View Code</a>
+        </div>
+    </div>
+
+    <script>
+        // ANIMATION: FADE IN HERO
+        gsap.to(".fade-in", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" });
+
+        const app = {
+            projects: [
+                {
+                    title: "Enedis Predictive Maint.",
+                    tags: ["NLP", "Internship"],
+                    desc_en: "NLP pipeline analyzing 60k logs to predict grid failures. Used TF-IDF & Logistic Regression.",
+                    desc_fr: "Pipeline NLP analysant 60k logs pour prédire les pannes. Utilisation de TF-IDF & Régression Logistique."
+                },
+                {
+                    title: "Clothing CNN",
+                    tags: ["Computer Vision", "AI"],
+                    desc_en: "Fashion item classification with high accuracy using Convolutional Neural Networks.",
+                    desc_fr: "Classification de vêtements haute précision via Réseaux de Neurones Convolutifs."
+                },
+                {
+                    title: "Algo Trading Bot",
+                    tags: ["Python", "Finance"],
+                    desc_en: "Automated trading system using technical indicators and API connections.",
+                    desc_fr: "Système de trading automatisé utilisant des indicateurs techniques et des API."
+                },
+                {
+                    title: "Spotify Analysis",
+                    tags: ["Data", "API"],
+                    desc_en: "Music recommendation engine insights based on audio features via Spotify API.",
+                    desc_fr: "Moteur de recommandation musicale basé sur les caractéristiques audio via l'API Spotify."
+                },
+                {
+                    title: "Time Series RNN",
+                    tags: ["Deep Learning", "Forecasting"],
+                    desc_en: "Forecasting complex non-linear patterns using LSTM/GRU Neural Networks.",
+                    desc_fr: "Prévision de modèles non linéaires complexes via réseaux de neurones LSTM/GRU."
+                },
+                {
+                    title: "NYC Real Estate",
+                    tags: ["Data Analysis", "Economy"],
+                    desc_en: "Economic modeling of property investments identifying high-yield zones.",
+                    desc_fr: "Modélisation économique des investissements immobiliers identifiant les zones à haut rendement."
+                }
+            ],
+
+            translations: {
+                en: {
+                    hero_sub: "Engineering <span style='color:var(--neon-purple)'>//</span> AI & Data Science <span style='color:var(--neon-purple)'>//</span> Strategy",
+                    btn_work: "View Projects", btn_contact: "Contact",
+                    about_title: "Engineer & <span style='color:var(--neon-blue)'>Athlete.</span>",
+                    about_text: `<p>I am a 19-year-old Dual Bachelor student at <strong>CentraleSupélec & ESSEC</strong>. Originally from <strong>La Réunion</strong>, my background is forged by high-performance sports (Gymnastics) and extreme academic rigor.</p><p>My mission: bridging the gap between <strong>complex algorithms</strong> and <strong>business strategy</strong>. I don't just code; I build solutions that impact the real economy.</p>`,
+                    path_title: "My Journey",
+                    path_1: "Double degree of excellence. Tech Club & Kryptosphere member.",
+                    path_2: "Math & Physics. Graduated with Honors.",
+                    path_3: "Statistical Modeling & English Fluency.",
+                    work_title: "Selected Projects",
+                    contact_title: "LET'S CONNECT"
+                },
+                fr: {
+                    hero_sub: "Ingénierie <span style='color:var(--neon-purple)'>//</span> Data Science <span style='color:var(--neon-purple)'>//</span> Stratégie",
+                    btn_work: "Voir Projets", btn_contact: "Contact",
+                    about_title: "Ingénieur & <span style='color:var(--neon-blue)'>Athlète.</span>",
+                    about_text: `<p>J'ai 19 ans et je suis étudiant en Double Bachelor à <strong>CentraleSupélec & ESSEC</strong>. Originaire de <strong>La Réunion</strong>, mon parcours est forgé par le sport de haut niveau et la rigueur académique.</p><p>Mon objectif est d'utiliser la <strong>Data Science</strong> pour résoudre des défis économiques concrets.</p>`,
+                    path_title: "Mon Parcours",
+                    path_1: "Double diplôme d'excellence. Membre Tech Club & Kryptosphere.",
+                    path_2: "Maths & Physique. Mention Bien.",
+                    path_3: "Modélisation statistique & Anglais courant.",
+                    work_title: "Projets Sélectionnés",
+                    contact_title: "DISCUTONS"
+                }
+            },
+
+            currentLang: 'en',
+
+            init: function() {
+                this.renderProjects();
+                this.initCanvas();
+            },
+
+            setLang: function(lang) {
+                this.currentLang = lang;
+                const els = document.querySelectorAll('[data-i18n]');
+                els.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if(this.translations[lang][key]) el.innerHTML = this.translations[lang][key];
+                });
+                this.renderProjects();
+            },
+
+            renderProjects: function() {
+                const container = document.getElementById('projects-container');
+                container.innerHTML = this.projects.map(p => {
+                    const desc = this.currentLang === 'en' ? p.desc_en : p.desc_fr;
+                    let tags = p.tags.map(t => `<span class="mono text-[10px] text-gray-500 border border-gray-800 px-2 py-1 mr-2">${t}</span>`).join('');
+                    
+                    return `
+                    <div class="holo-card p-8 cursor-pointer group" onclick="app.openModal('${p.title}')">
+                        <div class="mb-6">${tags}</div>
+                        <h3 class="text-xl font-bold text-white mb-4 orbitron group-hover:text-cyan-400 transition-colors">${p.title}</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">${desc}</p>
+                        <div class="mt-6 flex justify-end">
+                            <span class="text-cyan-400 text-xl font-bold group-hover:translate-x-2 transition-transform">→</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            },
+
+            openModal: function(title) {
+                const p = this.projects.find(x => x.title === title);
+                if(!p) return;
+                const desc = this.currentLang === 'en' ? p.desc_en : p.desc_fr;
+                document.getElementById('modal-title').innerText = p.title;
+                document.getElementById('modal-body').innerText = desc;
+                document.getElementById('project-modal').classList.remove('hidden');
+                gsap.fromTo("#modal-box", {y: 50, opacity: 0}, {y: 0, opacity: 1, duration: 0.3});
+            },
+            closeModal: function() {
+                document.getElementById('project-modal').classList.add('hidden');
+            },
+
+            /* --- NEURAL STORM CANVAS --- */
+            initCanvas: function() {
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                let width, height, particles = [];
+                let mouse = { x: -1000, y: -1000 };
+
+                const resize = () => {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                    initParticles();
+                }
+
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.vx = (Math.random() - 0.5) * 0.5;
+                        this.vy = (Math.random() - 0.5) * 0.5;
+                        this.size = Math.random() * 2;
+                    }
+                    update() {
+                        this.x += this.vx; this.y += this.vy;
+                        if(this.x < 0 || this.x > width) this.vx *= -1;
+                        if(this.y < 0 || this.y > height) this.vy *= -1;
+                        
+                        // Mouse interaction (Repulsion/Attraction)
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let dist = Math.sqrt(dx*dx + dy*dy);
+                        if(dist < 150) {
+                            this.x -= dx * 0.02; // Repel slightly
+                            this.y -= dy * 0.02;
+                        }
+                    }
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = "rgba(255,255,255,0.5)";
+                        ctx.fill();
+                    }
+                }
+
+                function initParticles() {
+                    particles = [];
+                    const count = window.innerWidth < 768 ? 50 : 100;
+                    for(let i=0; i<count; i++) particles.push(new Particle());
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+                    
+                    for(let i=0; i<particles.length; i++) {
+                        particles[i].update();
+                        particles[i].draw();
+                        
+                        // Connect particles close to mouse
+                        let dxM = mouse.x - particles[i].x;
+                        let dyM = mouse.y - particles[i].y;
+                        let distM = Math.sqrt(dxM*dxM + dyM*dyM);
+
+                        if(distM < 200) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(0, 243, 255, ${1 - distM/200})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(mouse.x, mouse.y);
+                            ctx.stroke();
+                        }
+                    }
+                    requestAnimationFrame(animate);
+                }
+
+                window.addEventListener('resize', resize);
+                window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+                resize();
+                animate();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>

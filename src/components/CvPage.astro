@@ -1,0 +1,317 @@
+---
+/**
+ * One-page A4 CV, rendered from the same data as the site.
+ * scripts/build-cv-pdf.ts prints it to PDF after each build.
+ * It deliberately contains no phone number, email or postal address:
+ * recruiters reach me through the site's contact form or LinkedIn.
+ */
+import '../styles/global.css';
+import { featuredProjects, profile, repoUrl } from '../lib/data.ts';
+import { formatRange } from '../lib/dates.ts';
+import { associations, work } from '../lib/timeline.ts';
+import { localizePath, pick, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const strip = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
+const canonical = new URL(localizePath('/cv/', lang), Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{`CV | ${profile.name}`}</title>
+    <meta name="description" content={t('meta.description')} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="toolbar">
+      <a href={localizePath('/', lang)}>polluxgronier.me</a>
+      <a class="button" href={`/cv/pollux-gronier-cv-${lang}.pdf`} download>
+        {t('cv.download')}
+      </a>
+    </div>
+
+    <main class="sheet">
+      <header>
+        <div>
+          <h1>{profile.name}</h1>
+          <p class="role">{pick(profile.role, lang)}, CentraleSupélec × ESSEC</p>
+        </div>
+        <ul class="contact">
+          <li>
+            <a href={`${profile.links.site}${localizePath('/', lang)}#contact`}>
+              {t('cv.contact')}
+            </a>
+          </li>
+          <li>
+            <a href={profile.links.linkedin}>{strip(profile.links.linkedin)}</a>
+          </li>
+          <li>
+            <a href={profile.links.github}>{strip(profile.links.github)}</a>
+          </li>
+        </ul>
+      </header>
+
+      <p class="summary">
+        {pick(profile.headline, lang)} {pick(profile.lookingFor, lang)}
+      </p>
+
+      <section>
+        <h2>{t('exp.title')}</h2>
+        {work.map((e) => (
+          <div class="entry">
+            <p class="line">
+              <span class="when">{formatRange(e.start, e.end, lang)}</span>
+              <strong>{e.org}</strong>
+              {`, ${pick(e.role, lang)}`}
+            </p>
+            {e.points.length > 1 && (
+              <ul>
+                {e.points.slice(0, 2).map((p) => (
+                  <li>{pick(p, lang)}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>{t('assoc.title')}</h2>
+        {associations.map((e) => (
+          <div class="entry">
+            <p class="line">
+              <span class="when">{formatRange(e.start, e.end, lang)}</span>
+              <strong>{e.org}</strong>
+              {`, ${pick(e.role, lang)}. `}
+              {e.points[0] && <span class="stack">{pick(e.points[0], lang)}</span>}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>{t('cv.selected')}</h2>
+        {featuredProjects.slice(0, 3).map((p) => (
+          <div class="entry">
+            <p class="line">
+              <strong>
+                <a href={repoUrl(p)}>{p.title}</a>
+              </strong>
+              {`: ${pick(p.question, lang)}`}
+              <span class="stack">{` ${p.stack.join(', ')}.`}</span>
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <section>
+        <h2>{t('edu.title')}</h2>
+        {profile.education.slice(0, 3).map((e) => (
+          <div class="entry">
+            <p class="line">
+              <span class="when">{formatRange(e.start, e.end, lang)}</span>
+              <strong>{e.school}</strong>
+              {`, ${pick(e.degree, lang)}. `}
+              {e.points[0] && <span class="stack">{pick(e.points[0], lang)}</span>}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      <section class="two">
+        <div>
+          <h2>{t('cv.skills')}</h2>
+          {profile.skills.map((g) => (
+            <p class="skill">
+              <strong>{pick(g.group, lang)}</strong>: {g.items.join(', ')}
+            </p>
+          ))}
+        </div>
+        <div>
+          <h2>{t('about.languages')}</h2>
+          <p class="skill">
+            {profile.languages
+              .map((l) => `${pick(l.name, lang)} (${pick(l.level, lang)})`)
+              .join(', ')}
+          </p>
+          <h2>{t('about.interests')}</h2>
+          <p class="skill">{profile.interests.map((i) => pick(i, lang)).join(', ')}</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* A CV is paper: always light, whatever the system theme. */
+  :root {
+    color-scheme: light;
+    --paper: #f6f7f4;
+    --paper-raised: #ffffff;
+    --ink: #0f1b2d;
+    --muted: #4f5a69;
+    --rule: #d8ddd9;
+    --lagoon: #0b6e6d;
+  }
+  body {
+    background: #e4e8e5;
+    font-size: 9.5pt;
+    line-height: 1.34;
+  }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    max-width: 210mm;
+    margin: 1rem auto;
+    padding-inline: 1rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+  }
+  .sheet {
+    max-width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 2rem;
+    padding: 11mm 13mm;
+    background: var(--paper-raised);
+    color: var(--ink);
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.5rem 2rem;
+    padding-bottom: 3mm;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  h1 {
+    font-size: 24pt;
+    font-weight: 800;
+    font-stretch: 75%;
+    line-height: 1;
+  }
+  .role {
+    font-family: var(--font-display);
+    color: var(--lagoon);
+    font-weight: 500;
+    margin-top: 1mm;
+  }
+  .contact {
+    list-style: none;
+    padding: 0;
+    text-align: right;
+    font-family: var(--font-display);
+    font-size: 9pt;
+  }
+  .summary {
+    margin-block: 3.5mm 1mm;
+  }
+  h2 {
+    font-size: 11.5pt;
+    font-stretch: 85%;
+    color: var(--lagoon);
+    margin-top: 3.2mm;
+    margin-bottom: 1.2mm;
+  }
+  .entry + .entry {
+    margin-top: 1.4mm;
+  }
+  .line::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+  .line strong {
+    font-family: var(--font-display);
+    font-weight: 650;
+  }
+  .when {
+    float: right;
+    margin-left: 1em;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  ul {
+    padding-left: 4.5mm;
+  }
+  .stack,
+  .skill {
+    color: var(--muted);
+  }
+  .skill strong {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 6mm;
+  }
+  .sheet a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media (max-width: 40rem) {
+    .sheet {
+      padding: 1.25rem;
+      min-height: 0;
+    }
+    .two {
+      grid-template-columns: 1fr;
+    }
+    .contact {
+      text-align: left;
+    }
+  }
+
+  /* On screens, links need a 24px touch target (WCAG 2.5.8); paper doesn't. */
+  @media screen {
+    .contact a,
+    .line a {
+      display: inline-block;
+      min-height: 24px;
+      line-height: 24px;
+    }
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  @media print {
+    :root {
+      color-scheme: light;
+      --paper-raised: #fff;
+      --ink: #0f1b2d;
+      --muted: #4f5a69;
+      --lagoon: #0b6e6d;
+      --rule: #d8ddd9;
+    }
+    body {
+      background: #fff;
+    }
+    .toolbar {
+      display: none;
+    }
+    .sheet {
+      margin: 0;
+      max-width: none;
+      min-height: 0;
+    }
+  }
+</style>

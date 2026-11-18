@@ -1,0 +1,271 @@
+---
+import { localizePath, otherLang, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+  /** English path of the current page. */
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const t = useTranslations(lang);
+const other = otherLang(lang);
+const fr = lang === 'fr';
+
+const items = [
+  { path: '/projects/', label: t('nav.projects') },
+  { path: '/about/', label: t('nav.background') },
+  { path: '/cv/', label: t('nav.cv') },
+  { path: '/contact/', label: t('nav.contact') },
+];
+// A project page belongs to the Projects section.
+const isCurrent = (itemPath: string) => path === itemPath || path.startsWith(itemPath);
+const tints = [
+  { id: 'night', label: fr ? 'Teinte nuit' : 'Night tint' },
+  { id: 'paper', label: fr ? 'Teinte papier' : 'Paper tint' },
+  { id: 'abyss', label: fr ? 'Teinte abysse' : 'Abyss tint' },
+];
+---
+
+<header class="site-header">
+  <div class="bar">
+    <a class="name" href={localizePath('/', lang)}>
+      Pollux Gronier
+    </a>
+
+    <nav class="desktop" aria-label={t('nav.label')}>
+      <ul>
+        {items.map((item) => (
+          <li>
+            <a
+              href={localizePath(item.path, lang)}
+              aria-current={isCurrent(item.path) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a
+            href={localizePath(path, other)}
+            hreflang={other}
+            lang={other}
+            aria-label={t('nav.switchLabel')}
+          >
+            {other.toUpperCase()}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="tints" role="group" aria-label={fr ? 'Couleur du site' : 'Site colour'}>
+      {tints.map((tint) => (
+        <button type="button" data-tint={tint.id} aria-label={tint.label} aria-pressed="false">
+          <span />
+        </button>
+      ))}
+    </div>
+
+    {/* On small screens the same links sit behind a native disclosure, which works without JavaScript. */}
+    <details class="mobile">
+      <summary>{t('nav.menu')}</summary>
+      <nav aria-label={t('nav.label')}>
+        <ul>
+          {items.map((item) => (
+            <li>
+              <a
+                href={localizePath(item.path, lang)}
+                aria-current={isCurrent(item.path) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href={localizePath(path, other)} hreflang={other} lang={other}>
+              {t('nav.switch')}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-tint]')];
+  const mark = () => {
+    const current = document.documentElement.dataset.theme ?? 'night';
+    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.tint === current));
+  };
+  for (const b of buttons) {
+    b.addEventListener('click', () => {
+      const tint = b.dataset.tint ?? 'night';
+      document.documentElement.dataset.theme = tint;
+      try {
+        localStorage.setItem('tint', tint);
+      } catch {
+        // Private mode: the tint simply lasts for this page.
+      }
+      mark();
+    });
+  }
+  mark();
+
+  // Press T to cycle through the tints.
+  const order = ['night', 'paper', 'abyss'];
+  addEventListener('keydown', (event) => {
+    if (event.key.toLowerCase() !== 't' || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('input, textarea, select, [contenteditable]')) return;
+    const current = document.documentElement.dataset.theme ?? 'night';
+    const next = order[(order.indexOf(current) + 1) % order.length] ?? 'night';
+    buttons.find((b) => b.dataset.tint === next)?.click();
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter: blur(14px);
+    transition: background-color 400ms var(--ease);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.4vw, 2.25rem);
+    min-height: 4.75rem;
+    padding-inline: var(--margin);
+  }
+  .name {
+    margin-right: auto;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  ul {
+    display: flex;
+    gap: clamp(1rem, 2.4vw, 2.25rem);
+    list-style: none;
+    padding: 0;
+  }
+  nav a {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.6rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+  .desktop a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.25rem;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 260ms var(--ease-out);
+  }
+  .desktop a:hover::after,
+  .desktop a[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .tints {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .tints button {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+  .tints span {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    transition: transform 200ms var(--ease-out);
+  }
+  .tints [data-tint='night'] span {
+    background: #ff5a1f;
+  }
+  .tints [data-tint='paper'] span {
+    background: #1d3dff;
+  }
+  .tints [data-tint='abyss'] span {
+    background: #5eead4;
+  }
+  .tints button:hover span {
+    transform: scale(1.25);
+  }
+  .tints button[aria-pressed='true'] {
+    background: var(--surface-2);
+  }
+
+  .mobile {
+    display: none;
+    position: relative;
+  }
+  summary {
+    list-style: none;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    background: var(--surface);
+    font-weight: 700;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile[open] summary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .mobile nav {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    min-width: 14rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 1rem;
+    background: var(--surface-2);
+  }
+  .mobile ul {
+    flex-direction: column;
+    gap: 0;
+  }
+  .mobile a {
+    display: block;
+    padding-block: 0.75rem;
+    font-size: 1rem;
+  }
+
+  @media (max-width: 47.99rem) {
+    .desktop {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
+  }
+</style>

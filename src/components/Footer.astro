@@ -1,0 +1,72 @@
+---
+import { profile } from '../lib/data.ts';
+import { useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+const fr = lang === 'fr';
+---
+
+<footer class="site-footer">
+  <p>
+    © {year} {profile.name}.{' '}
+    {fr
+      ? 'Écrit à la main, très testé, zéro traceur.'
+      : 'Hand-written, heavily tested, zero trackers.'}
+  </p>
+  <p class="hint">
+    {fr
+      ? 'Psst : appuyez sur T pour changer les couleurs.'
+      : 'Psst: press T to change the colours.'}
+  </p>
+  <ul>
+    <li>
+      <a href={profile.links.github} rel="me">
+        GitHub
+      </a>
+    </li>
+    <li>
+      <a href={profile.links.linkedin} rel="me">
+        LinkedIn
+      </a>
+    </li>
+    <li>
+      <a href={`${profile.links.github}/Personal_website`}>{t('footer.source')}</a>
+    </li>
+  </ul>
+</footer>
+
+<style>
+  .site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: var(--section-gap);
+    padding: 0 var(--margin) 2rem;
+    font-size: var(--step-small);
+    color: var(--muted);
+  }
+  .hint {
+    width: 100%;
+    order: 3;
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    list-style: none;
+    padding: 0;
+  }
+  ul a {
+    color: var(--ink);
+    display: inline-block;
+    padding-block: 0.3rem;
+  }
+</style>

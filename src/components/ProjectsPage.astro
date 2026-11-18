@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectList from './ProjectList.astro';
+import { projects } from '../lib/data.ts';
+import { useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base
+  lang={lang}
+  path="/projects/"
+  title={t('projects.title')}
+  description={t('projects.description')}
+>
+  <noscript>
+    <style is:inline>
+      [data-filter] {
+        display: none;
+      }
+    </style>
+  </noscript>
+  <div class="wrap page">
+    <h1 data-words>{t('projects.title')}</h1>
+    <ProjectList lang={lang} projects={projects} filter />
+  </div>
+</Base>
+
+<style>
+  h1 {
+    font-size: var(--step-display);
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+</style>

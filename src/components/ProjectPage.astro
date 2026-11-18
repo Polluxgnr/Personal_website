@@ -1,0 +1,255 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Flow from './Flow.astro';
+import ToolName from './ToolName.astro';
+import { projects, repoUrl } from '../lib/data.ts';
+import { formatDay } from '../lib/dates.ts';
+import { projectImages } from '../lib/projectImages.ts';
+import type { Project } from '../lib/schema.ts';
+import { localizePath, pick, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+  project: Project;
+}
+
+const { lang, project } = Astro.props;
+const t = useTranslations(lang);
+const path = `/projects/${project.repo.toLowerCase()}/`;
+const image = projectImages[project.repo];
+const index = projects.findIndex((p) => p.repo === project.repo);
+const next = projects[(index + 1) % projects.length];
+const nextLabel = lang === 'fr' ? 'Projet suivant' : 'Next project';
+---
+
+<Base lang={lang} path={path} title={project.title} description={pick(project.question, lang)}>
+  <article class="wrap page">
+    <p class="back">
+      <a class="text-link" href={localizePath('/projects/', lang)}>
+        {t('project.back')}
+      </a>
+    </p>
+    <h1 class="title">{project.title}</h1>
+    <p class="question">{pick(project.question, lang)}</p>
+
+    {image && (
+      <figure class="visual" data-reveal-group>
+        <div data-reveal>
+          <Picture
+            src={image.src}
+            alt={pick(image.alt, lang)}
+            widths={[640, 1100, 1600]}
+            sizes="(min-width: 92rem) 88rem, 94vw"
+            formats={['avif', 'webp']}
+            loading="eager"
+          />
+        </div>
+      </figure>
+    )}
+
+    <div class="cols" data-reveal-group>
+      <div class="main">
+        {project.why && (
+          <>
+            <h2 data-reveal>{t('project.why')}</h2>
+            <p class="why" data-reveal>
+              {pick(project.why, lang)}
+            </p>
+          </>
+        )}
+        <h2 data-reveal>{t('project.what')}</h2>
+        <p data-reveal>{pick(project.summary, lang)}</p>
+        {project.highlights.length > 0 && (
+          <>
+            <h2 data-reveal>{t('project.highlights')}</h2>
+            <ul data-reveal>
+              {project.highlights.map((h) => (
+                <li>{pick(h, lang)}</li>
+              ))}
+            </ul>
+          </>
+        )}
+        {project.source === 'ai' && <p class="note">{t('project.aiNote')}</p>}
+      </div>
+      <aside data-reveal>
+        <h2>{t('project.stack')}</h2>
+        <ul class="tags">
+          {project.stack.map((s) => (
+            <li>
+              <ToolName name={s} />
+            </li>
+          ))}
+        </ul>
+        <div class="actions">
+          <a class="button" href={repoUrl(project)} data-magnetic>
+            {t('work.code')}
+          </a>
+          {project.homepage && (
+            <a class="text-link" href={project.homepage}>
+              {t('work.live')}
+            </a>
+          )}
+        </div>
+        <p class="updated">
+          {t('work.updated')}
+          <time datetime={project.pushedAt}>{formatDay(project.pushedAt, lang)}</time>
+        </p>
+      </aside>
+    </div>
+
+    {project.architecture && (
+      <section class="how" aria-labelledby="how-title">
+        <h2 id="how-title" data-words>
+          {t('project.how')}
+        </h2>
+        <Flow
+          label={t('project.how')}
+          steps={project.architecture.map((s) => ({
+            title: pick(s.title, lang),
+            detail: pick(s.detail, lang),
+          }))}
+        />
+      </section>
+    )}
+
+    {next && (
+      <a class="next" href={localizePath(`/projects/${next.repo.toLowerCase()}/`, lang)}>
+        <span>{nextLabel}</span>
+        <strong>{next.title}</strong>
+      </a>
+    )}
+  </article>
+</Base>
+
+<style>
+  .back {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+    font-size: var(--step-small);
+  }
+  .title {
+    font-size: var(--step-display);
+    line-height: 0.98;
+    /* The title arrives from the row that was clicked in the project list. */
+    view-transition-name: project-title;
+    width: fit-content;
+  }
+  .question {
+    margin-top: 1.5rem;
+    max-width: 30ch;
+    font-size: var(--step-lead);
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .visual {
+    margin: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+  }
+  .visual div {
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: var(--surface);
+  }
+  .visual :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  .why {
+    font-size: var(--step-lead);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .how {
+    margin-top: var(--section-gap);
+  }
+  .how h2 {
+    font-size: var(--step-head);
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+  .cols {
+    display: grid;
+    gap: 2.5rem clamp(2rem, 6vw, 6rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+  @media (min-width: 60rem) {
+    .cols {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    }
+  }
+  h2 {
+    font-size: var(--step-lead);
+    margin-bottom: 0.875rem;
+  }
+  .main {
+    max-width: var(--measure);
+  }
+  .main h2:not(:first-child) {
+    margin-top: 2.5rem;
+  }
+  .main ul {
+    padding-left: 1.1em;
+  }
+  .main li + li {
+    margin-top: 0.4em;
+  }
+  .note {
+    margin-top: 2.5rem;
+    color: var(--muted);
+    font-size: var(--step-small);
+    font-style: italic;
+  }
+  aside {
+    align-self: start;
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    border-radius: 1.5rem;
+    background: var(--surface);
+  }
+  aside .tags li {
+    background: var(--surface-2);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-block: 1.75rem 1.25rem;
+  }
+  .updated {
+    color: var(--muted);
+    font-size: var(--step-small);
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    margin-top: var(--section-gap);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 1.5rem;
+    background: var(--surface);
+    text-decoration: none;
+    transition:
+      background-color 240ms var(--ease),
+      color 240ms var(--ease);
+  }
+  .next span {
+    color: var(--muted);
+    transition: color 240ms var(--ease);
+  }
+  .next strong {
+    font-family: var(--font-display);
+    font-size: var(--step-head);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  .next:hover,
+  .next:focus-visible {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .next:hover span,
+  .next:focus-visible span {
+    color: var(--accent-ink);
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import { toolIcon } from '../lib/icons.ts';
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const icon = toolIcon(name);
+---
+
+<span class="tool">
+  {icon && (
+    <svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="currentColor" aria-hidden="true">
+      <path d={icon.path} />
+    </svg>
+  )}
+  {name}
+</span>
+
+<style>
+  .tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    white-space: nowrap;
+  }
+  svg {
+    flex: none;
+  }
+</style>

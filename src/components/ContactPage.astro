@@ -1,0 +1,263 @@
+---
+import Base from '../layouts/Base.astro';
+import Logo from './Logo.astro';
+import { contact } from '../config.ts';
+import { profile } from '../lib/data.ts';
+import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+// Web3Forms redirects plain (no-JavaScript) form posts back here.
+const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site).href;
+---
+
+<Base
+  lang={lang}
+  path="/contact/"
+  title={t('contact.title')}
+  description={t('contact.description')}
+>
+  <section class="wrap page grid" aria-labelledby="contact-title">
+    <div class="intro">
+      <h1 id="contact-title" data-words>
+        {t('contact.title')}
+      </h1>
+      <p class="lede">{t('contact.lede')}</p>
+      <p class="joke">{t('contact.joke')}</p>
+      <p class="elsewhere">{t('contact.elsewhere')}</p>
+      <ul class="channels">
+        <li>
+          <a href={profile.links.linkedin} rel="me">
+            LinkedIn
+          </a>
+        </li>
+        <li>
+          <a href={profile.links.github} rel="me" class="github-link">
+            <Logo name="github" label="GitHub" />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <form
+      method="post"
+      action={contact.accessKey ? contact.endpoint : undefined}
+      novalidate
+      data-contact
+      data-msg-sending={t('contact.sending')}
+      data-msg-sent={t('contact.sent')}
+      data-msg-error={t('contact.error')}
+      data-msg-invalid={t('contact.invalid')}
+      data-msg-offline={t('contact.offline')}
+    >
+      <input type="hidden" name="access_key" value={contact.accessKey} />
+      <input type="hidden" name="subject" value="polluxgronier.me: new message" />
+      <input type="hidden" name="from_name" value="polluxgronier.me" />
+      <input type="hidden" name="redirect" value={returnTo} />
+      <input type="hidden" name="lang" value={lang} />
+      <div class="pair">
+        <div class="field">
+          <label for="c-name">{t('contact.name')}</label>
+          <input id="c-name" name="name" required maxlength="100" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="c-email">{t('contact.email')}</label>
+          <input
+            id="c-email"
+            name="email"
+            type="email"
+            required
+            maxlength="200"
+            autocomplete="email"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label for="c-company">{t('contact.company')}</label>
+        <input id="c-company" name="company" maxlength="120" autocomplete="organization" />
+      </div>
+      <div class="field">
+        <label for="c-message">{t('contact.message')}</label>
+        <textarea
+          id="c-message"
+          name="message"
+          required
+          minlength="10"
+          maxlength="5000"
+          rows="7"
+        ></textarea>
+      </div>
+      {/* Web3Forms honeypot: hidden from people, ticked by naive bots, which get dropped. */}
+      <input
+        type="checkbox"
+        name="botcheck"
+        class="trap"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+      />
+      <div class="submit">
+        <button class="button" type="submit">
+          {t('contact.send')}
+        </button>
+        <p class="message" role="status" aria-live="polite" data-contact-status></p>
+      </div>
+    </form>
+  </section>
+</Base>
+
+<script>
+  import { submitContact } from '../lib/contact-client.ts';
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact]');
+  const status = form?.querySelector<HTMLElement>('[data-contact-status]');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  if (form && status && button) {
+    const text = (key: string) => form.dataset[key] ?? '';
+    const show = (message: string, state: 'ok' | 'error' | '') => {
+      status.textContent = message;
+      status.dataset.state = state;
+    };
+
+    if (new URLSearchParams(location.search).get('sent') === '1') show(text('msgSent'), 'ok');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        show(text('msgInvalid'), 'error');
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        return;
+      }
+      // No access key configured yet: say so plainly instead of pretending to send.
+      if (!form.getAttribute('action')) {
+        show(text('msgOffline'), 'error');
+        return;
+      }
+      button.disabled = true;
+      show(text('msgSending'), '');
+
+      const result = await submitContact(form.action, new FormData(form));
+      button.disabled = false;
+      if (result === 'ok') {
+        form.reset();
+        show(text('msgSent'), 'ok');
+      } else {
+        show(text(result === 'invalid' ? 'msgInvalid' : 'msgError'), 'error');
+      }
+    });
+  }
+</script>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 2.5rem var(--section-gap);
+    align-items: start;
+  }
+  @media (min-width: 56rem) {
+    .grid {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    }
+  }
+  h1 {
+    font-size: var(--step-display);
+    margin-bottom: 0.875rem;
+  }
+  .joke {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .elsewhere {
+    color: var(--muted);
+  }
+  .channels {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-weight: 700;
+  }
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+  }
+  .channels a {
+    display: inline-block;
+    padding-block: 0.4rem;
+  }
+  form {
+    display: grid;
+    gap: 1.5rem;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    background: var(--surface);
+  }
+  .pair {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 40rem) {
+    .pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 0.35rem;
+  }
+  label {
+    font-weight: 600;
+  }
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 0;
+    border-radius: 0.75rem;
+    background: var(--bg);
+    color: var(--ink);
+    transition: background-color 150ms var(--ease);
+  }
+  input:hover,
+  textarea:hover {
+    background: var(--surface-2);
+  }
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 0;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 10rem;
+  }
+  .trap {
+    position: absolute;
+    left: -9999px;
+  }
+  .submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.875rem 1.5rem;
+  }
+  .message:empty {
+    display: none;
+  }
+  .message[data-state='ok'] {
+    color: var(--ink);
+  }
+  .message[data-state='error'] {
+    color: var(--danger);
+  }
+  @media (max-width: 40rem) {
+    form {
+      padding: 1.5rem;
+    }
+  }
+</style>

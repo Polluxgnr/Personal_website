@@ -1,0 +1,52 @@
+name: Sync projects from GitHub
+
+# Every Monday, rewrite the project cards of new repositories or of
+# repositories whose README changed, and open a pull request to review.
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-projects
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      - name: Update src/data/projects.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SYNC_SUMMARY: ${{ runner.temp }}/sync-summary.md
+        run: npm run sync:projects
+
+      # Pull requests opened with GITHUB_TOKEN do not trigger other workflows,
+      # so the checks that matter run here before the pull request is opened.
+      - name: Check the result builds
+        run: |
+          npm run check
+          npm test
+          npm run build:site
+
+      - uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7
+        with:
+          branch: bot/sync-projects
+          delete-branch: true
+          add-paths: src/data/projects.json
+          commit-message: 'Sync project cards from GitHub'
+          title: 'Sync project cards from GitHub'
+          body-path: ${{ runner.temp }}/sync-summary.md
+          labels: content

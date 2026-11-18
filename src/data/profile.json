@@ -1,0 +1,433 @@
+{
+  "name": "Pollux Gronier",
+  "location": "Paris",
+  "role": {
+    "en": "AI & data science student",
+    "fr": "Étudiant en IA et data science"
+  },
+  "headline": {
+    "en": "I build data pipelines, models and small products that answer real questions.",
+    "fr": "Je construis des pipelines de données, des modèles et de petits produits qui répondent à de vraies questions."
+  },
+  "now": {
+    "en": "Exchange semester in computer science at UC3M, Madrid, from January to May 2027.",
+    "fr": "Semestre d'échange en informatique à l'UC3M, à Madrid, de janvier à mai 2027."
+  },
+  "intro": [
+    {
+      "en": "I'm in the AIDAMS bachelor at CentraleSupélec and ESSEC: artificial intelligence, data science and management, taught in English. I grew up on Réunion Island and spent a year of high school in Vancouver.",
+      "fr": "Je suis en bachelor AIDAMS à CentraleSupélec et à l'ESSEC : intelligence artificielle, data science et management, en anglais. J'ai grandi à La Réunion et passé une année de lycée à Vancouver."
+    },
+    {
+      "en": "I like work where the code has to hold up against real data and a real decision: maintenance requests at Enedis, ticketing operations at Digimobee, or my own savings account.",
+      "fr": "J'aime quand le code doit tenir face à de vraies données et à une vraie décision : les demandes de maintenance chez Enedis, l'exploitation de la billetterie chez Digimobee, ou mon propre PEA."
+    }
+  ],
+  "lookingFor": {
+    "en": "I'm looking for a summer internship in 2027 and a 6-month data science or AI internship in the first half of 2028.",
+    "fr": "Je cherche un stage d'été en 2027 et un stage de 6 mois en data science ou IA au premier semestre 2028."
+  },
+  "links": {
+    "github": "https://github.com/Polluxgnr",
+    "linkedin": "https://www.linkedin.com/in/polluxgronier",
+    "site": "https://polluxgronier.me"
+  },
+  "experience": [
+    {
+      "kind": "work",
+      "org": "Digimobee",
+      "role": {
+        "en": "Data analyst intern",
+        "fr": "Stagiaire data analyst"
+      },
+      "place": "Paris",
+      "start": "2026-05",
+      "end": "2026-08",
+      "points": [
+        {
+          "en": "Built automated Python data pipelines and integrated ClickHouse, dbt and Airbyte into a high-security mobile ticketing platform.",
+          "fr": "Pipelines de données Python automatisés et intégration de ClickHouse, dbt et Airbyte dans une plateforme de billetterie mobile à haut niveau de sécurité."
+        },
+        {
+          "en": "Shipped SQL and Metabase dashboards and alerting scripts that the engineering and finance teams adopted to monitor real-time operations.",
+          "fr": "Tableaux de bord SQL/Metabase et scripts d'alerte mis en production, adoptés par les équipes ingénierie et finance pour suivre les opérations en temps réel."
+        },
+        {
+          "en": "Learned the ticketing side of the product: iOS and Android apps for transport authorities, NFC, Bluetooth and QR validation, virtualised transport cards, and a trade show to hear what the clients need.",
+          "fr": "Découverte du métier de la billettique : applications iOS et Android pour des autorités de mobilité, validation NFC, Bluetooth et QR code, cartes de transport virtualisées, et un salon professionnel pour comprendre les besoins des clients."
+        }
+      ]
+    },
+    {
+      "kind": "work",
+      "org": "Enedis",
+      "role": {
+        "en": "Data analyst intern",
+        "fr": "Stagiaire data analyst"
+      },
+      "place": "Paris",
+      "start": "2025-03",
+      "end": "2025-03",
+      "points": [
+        {
+          "en": "Built an NLP pipeline over 60,000 technical requests to predict maintenance needs.",
+          "fr": "Pipeline NLP sur plus de 60 000 demandes techniques pour prédire les besoins de maintenance."
+        },
+        {
+          "en": "Used TF-IDF, logistic regression and ensemble models to detect which requests need an intervention.",
+          "fr": "TF-IDF, régression logistique et modèles d'ensemble pour détecter les demandes qui nécessitent une intervention."
+        }
+      ]
+    },
+    {
+      "kind": "work",
+      "org": "Private tutoring",
+      "role": {
+        "en": "Maths tutor, high-school level",
+        "fr": "Professeur particulier de maths, niveau lycée"
+      },
+      "place": "Reims, Paris",
+      "start": "2022",
+      "end": "2025",
+      "points": [
+        {
+          "en": "Weekly maths lessons for high-school students.",
+          "fr": "Cours de maths hebdomadaires pour des lycéens."
+        }
+      ]
+    },
+    {
+      "kind": "association",
+      "org": "ESSEC Club of Economics",
+      "role": {
+        "en": "AI & financial innovation team",
+        "fr": "Pôle IA et innovation financière"
+      },
+      "place": "Paris",
+      "start": "2026-09",
+      "end": "2028-06",
+      "points": [
+        {
+          "en": "Built AI agents and automated workflows for financial analysis, including an auditable equity research pipeline that only states what its sources support.",
+          "fr": "Agents IA et workflows automatisés pour l'analyse financière, dont un pipeline de recherche actions auditable qui n'affirme que ce que ses sources soutiennent."
+        },
+        {
+          "en": "Helped build a shared platform gathering past pitches, models and courses for onboarding new members.",
+          "fr": "Participation à une plateforme commune qui rassemble pitchs, modèles et cours pour l'intégration des nouveaux membres."
+        }
+      ]
+    },
+    {
+      "kind": "association",
+      "org": "Kryptosphere ESSEC",
+      "role": {
+        "en": "Events and partnerships",
+        "fr": "Événements et partenariats"
+      },
+      "place": "Paris",
+      "start": "2025-09",
+      "end": "2028-06",
+      "points": [
+        {
+          "en": "Organised several hackathons: partnerships, logistics and paperwork.",
+          "fr": "Organisation de plusieurs hackathons : partenariats, logistique et administratif."
+        },
+        {
+          "en": "International student network on crypto, finance, AI and cybersecurity.",
+          "fr": "Réseau étudiant international autour de la crypto, de la finance, de l'IA et de la cybersécurité."
+        }
+      ]
+    },
+    {
+      "kind": "association",
+      "org": "CentraleSupélec Tech Club",
+      "role": {
+        "en": "Robotics team",
+        "fr": "Équipe robotique"
+      },
+      "place": "Gif-sur-Yvette",
+      "start": "2024-09",
+      "end": "2028-06",
+      "points": [
+        {
+          "en": "Mechanical design and automation for competition robots: 3D design and printing, welding, laser cutting, wiring, embedded programming.",
+          "fr": "Conception mécanique et automatisation de robots de compétition : CAO et impression 3D, soudure, découpe laser, câblage, programmation embarquée."
+        },
+        {
+          "en": "Reached the final phase of the Coupe de France de Robotique 2025, a first for the school.",
+          "fr": "Phase finale de la Coupe de France de Robotique 2025, une première pour l'école."
+        }
+      ]
+    },
+    {
+      "kind": "competition",
+      "org": "Bloomberg Global Trading Challenge",
+      "role": {
+        "en": "Team Market Makers, 1st of 10 ESSEC teams",
+        "fr": "Équipe Market Makers, 1re des 10 équipes de l'ESSEC"
+      },
+      "place": "ESSEC",
+      "start": "2025-10",
+      "end": "2025-11",
+      "points": [
+        {
+          "en": "Built and ran a multi-asset strategy on the Bloomberg Terminal over five weeks of simulated trading, against 2,394 university teams worldwide.",
+          "fr": "Stratégie multi-actifs construite et pilotée sur le terminal Bloomberg pendant cinq semaines de trading simulé, face à 2 394 équipes universitaires du monde entier."
+        }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Universidad Carlos III de Madrid (UC3M)",
+      "degree": {
+        "en": "Exchange semester, computer science and engineering",
+        "fr": "Semestre d'échange, informatique"
+      },
+      "place": "Madrid",
+      "start": "2027-01",
+      "end": "2027-05",
+      "points": [
+        {
+          "en": "School of Engineering, Leganés campus, courses taught in English.",
+          "fr": "École d'ingénieurs, campus de Leganés, cours en anglais."
+        },
+        {
+          "en": "Mobile applications, programming techniques, operating systems, networks and services.",
+          "fr": "Applications mobiles, techniques de programmation, systèmes d'exploitation, réseaux et services."
+        }
+      ]
+    },
+    {
+      "school": "CentraleSupélec & ESSEC Business School",
+      "degree": {
+        "en": "Bachelor in AI, Data & Management Sciences (AIDAMS)",
+        "fr": "Bachelor en IA, data et management (AIDAMS)"
+      },
+      "place": "Paris",
+      "start": "2024",
+      "end": "2028",
+      "points": [
+        {
+          "en": "Dual degree taught in English.",
+          "fr": "Double diplôme enseigné en anglais."
+        },
+        {
+          "en": "Calculus, linear algebra, probability, optimisation, algorithms and data structures, statistics, machine learning, NLP, computer vision, marketing, geopolitics.",
+          "fr": "Analyse, algèbre linéaire, probabilités, optimisation, algorithmique et structures de données, statistiques, machine learning, NLP, vision par ordinateur, marketing, géopolitique."
+        }
+      ]
+    },
+    {
+      "school": "Lycée Saint-Joseph",
+      "degree": {
+        "en": "French baccalauréat",
+        "fr": "Baccalauréat général"
+      },
+      "place": "Reims",
+      "start": "2023",
+      "end": "2024",
+      "points": [
+        {
+          "en": "Maths, physics and advanced maths. Highest honours.",
+          "fr": "Maths, physique et maths expertes. Mention Très Bien."
+        }
+      ]
+    },
+    {
+      "school": "Delview Secondary School",
+      "degree": {
+        "en": "Grade 12, exchange year",
+        "fr": "Grade 12, année d'échange"
+      },
+      "place": "Vancouver",
+      "start": "2022",
+      "end": "2023",
+      "points": [
+        {
+          "en": "Full immersion with a host family.",
+          "fr": "Immersion complète en famille d'accueil."
+        }
+      ]
+    },
+    {
+      "school": "Lycée Louis Payen",
+      "degree": {
+        "en": "Grades 10 and 11",
+        "fr": "Seconde et première"
+      },
+      "place": "Réunion Island",
+      "start": "2020",
+      "end": "2022",
+      "points": [
+        {
+          "en": "Maths, physics, engineering science, European English section.",
+          "fr": "Maths, physique, sciences de l'ingénieur, section européenne anglais."
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "group": {
+        "en": "Languages",
+        "fr": "Langages"
+      },
+      "items": ["Python", "SQL", "C/C++", "JavaScript", "Bash"]
+    },
+    {
+      "group": {
+        "en": "Machine learning and AI",
+        "fr": "Machine learning et IA"
+      },
+      "items": [
+        "scikit-learn",
+        "PyTorch",
+        "XGBoost",
+        "Transformers",
+        "LangChain",
+        "LangGraph",
+        "RAG"
+      ]
+    },
+    {
+      "group": {
+        "en": "Data",
+        "fr": "Données"
+      },
+      "items": ["pandas", "NumPy", "DuckDB", "PostgreSQL", "Neo4j", "ClickHouse", "dbt", "Airbyte"]
+    },
+    {
+      "group": {
+        "en": "Shipping it",
+        "fr": "Mise en production"
+      },
+      "items": ["Docker", "FastAPI", "Streamlit", "GitHub Actions", "Metabase", "Power BI", "Git"]
+    }
+  ],
+  "languages": [
+    {
+      "name": {
+        "en": "French",
+        "fr": "Français"
+      },
+      "level": {
+        "en": "native",
+        "fr": "langue maternelle"
+      }
+    },
+    {
+      "name": {
+        "en": "English",
+        "fr": "Anglais"
+      },
+      "level": {
+        "en": "fluent, IELTS C1",
+        "fr": "courant, IELTS C1"
+      }
+    },
+    {
+      "name": {
+        "en": "Chinese",
+        "fr": "Chinois"
+      },
+      "level": {
+        "en": "intermediate",
+        "fr": "intermédiaire"
+      }
+    },
+    {
+      "name": {
+        "en": "Spanish, German",
+        "fr": "Espagnol, allemand"
+      },
+      "level": {
+        "en": "basic",
+        "fr": "notions"
+      }
+    }
+  ],
+  "interests": [
+    {
+      "en": "Gymnastics for 7 years, Réunion vice-champion in 2018",
+      "fr": "Gymnastique pendant 7 ans, vice-champion de La Réunion en 2018"
+    },
+    {
+      "en": "Climbing for 6 years",
+      "fr": "Escalade depuis 6 ans"
+    },
+    {
+      "en": "Volleyball",
+      "fr": "Volley-ball"
+    },
+    {
+      "en": "Snowboarding",
+      "fr": "Snowboard"
+    },
+    {
+      "en": "Chess",
+      "fr": "Échecs"
+    },
+    {
+      "en": "Cooking",
+      "fr": "Cuisine"
+    }
+  ],
+  "journey": [
+    {
+      "when": "2020–2022",
+      "title": {
+        "en": "Réunion Island",
+        "fr": "La Réunion"
+      },
+      "text": {
+        "en": "Where I grew up. Seven years of gymnastics, Réunion vice-champion in 2018, and the European English section at Lycée Louis Payen.",
+        "fr": "Là où j’ai grandi. Sept ans de gymnastique, vice-champion de La Réunion en 2018, et la section européenne anglais au lycée Louis Payen."
+      }
+    },
+    {
+      "when": "2022–2023",
+      "title": {
+        "en": "Vancouver",
+        "fr": "Vancouver"
+      },
+      "text": {
+        "en": "A year at Delview Secondary School in full immersion with a host family. My English is now IELTS C1.",
+        "fr": "Une année au Delview Secondary School en immersion complète dans une famille d’accueil. Mon anglais est aujourd’hui niveau IELTS C1."
+      }
+    },
+    {
+      "when": "2023–2024",
+      "title": {
+        "en": "Reims",
+        "fr": "Reims"
+      },
+      "text": {
+        "en": "Boarding school at Lycée Saint-Joseph: maths, physics and advanced maths, and a baccalauréat with highest honours. I tutored high-school maths on the side.",
+        "fr": "Internat au lycée Saint-Joseph : maths, physique et maths expertes, et un baccalauréat avec la mention Très Bien. J’ai aussi donné des cours de maths à des lycéens."
+      }
+    },
+    {
+      "when": "2024–2028",
+      "title": {
+        "en": "Paris",
+        "fr": "Paris"
+      },
+      "text": {
+        "en": "CentraleSupélec and ESSEC, in the AIDAMS bachelor. Robotics with the Tech Club (final phase of the Coupe de France in 2025), Kryptosphere, the ESSEC Club of Economics, and internships at Enedis and Digimobee.",
+        "fr": "CentraleSupélec et ESSEC, dans le bachelor AIDAMS. Robotique avec le Tech Club (phase finale de la Coupe de France en 2025), Kryptosphere, l’ESSEC Club of Economics, et des stages chez Enedis et Digimobee."
+      }
+    },
+    {
+      "when": "2027",
+      "title": {
+        "en": "Madrid",
+        "fr": "Madrid"
+      },
+      "text": {
+        "en": "An exchange semester in computer science at UC3M, from January to May: mobile applications, operating systems, networks and programming techniques.",
+        "fr": "Un semestre d’échange en informatique à l’UC3M, de janvier à mai : applications mobiles, systèmes d’exploitation, réseaux et techniques de programmation."
+      }
+    }
+  ]
+}

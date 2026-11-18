@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://polluxgronier.me/sitemap-index.xml

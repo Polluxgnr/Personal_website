@@ -1,0 +1,200 @@
+---
+import { skills, skillId } from '../lib/data.ts';
+import type { Project } from '../lib/schema.ts';
+import { localizePath, pick, skillName, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+  projects: readonly Project[];
+  /** Show the skill filter above the list. */
+  filter?: boolean;
+}
+
+const { lang, projects, filter = false } = Astro.props;
+const t = useTranslations(lang);
+const detail = (repo: string) => localizePath(`/projects/${repo.toLowerCase()}/`, lang);
+---
+
+<div id="work">
+  {filter && (
+    <>
+      <div class="filter" role="group" aria-labelledby="filter-label" data-filter>
+        <span id="filter-label">{t('work.filter')}</span>
+        <button type="button" aria-pressed="true" data-skill="">
+          {t('work.all')}
+        </button>
+        {skills.map((s) => (
+          <button type="button" aria-pressed="false" data-skill={skillId(s)}>
+            {skillName(s, lang)}
+          </button>
+        ))}
+      </div>
+      <p class="visually-hidden" role="status" data-filter-status />
+    </>
+  )}
+
+  <ul class="rows" role="list" data-reveal-group>
+    {projects.map((p) => (
+      <li class="project" data-skills={p.skills.map(skillId).join(' ')} data-reveal>
+        <a class="row" href={detail(p.repo)} data-project-link>
+          <span class="title" data-project-title>
+            {p.title}
+          </span>
+          <span class="question">{pick(p.question, lang)}</span>
+          <span class="stack">{p.stack.slice(0, 3).join(', ')}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  {filter && (
+    <p class="empty" data-filter-empty hidden>
+      {t('work.empty')}
+    </p>
+  )}
+</div>
+
+<script>
+  // The clicked project's title travels to its page (cross-document view transition).
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-project-link]')) {
+    link.addEventListener('click', () => {
+      const title = link.querySelector<HTMLElement>('[data-project-title]');
+      if (title) title.style.viewTransitionName = 'project-title';
+    });
+  }
+
+  // Skill filter. Progressive enhancement: without JavaScript every project stays listed.
+  const filter = document.querySelector<HTMLElement>('[data-filter]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+  if (filter && status && empty) {
+    const buttons = [...filter.querySelectorAll<HTMLButtonElement>('button')];
+    const items = [...document.querySelectorAll<HTMLElement>('#work .project')];
+
+    const apply = (skill: string, announce: boolean) => {
+      let shown = 0;
+      for (const item of items) {
+        const match = !skill || (item.dataset.skills ?? '').split(' ').includes(skill);
+        item.hidden = !match;
+        if (match) shown++;
+      }
+      for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.skill === skill));
+      empty.hidden = shown > 0;
+      if (announce) status.textContent = `${shown} / ${items.length}`;
+      const url = new URL(location.href);
+      if (skill) url.searchParams.set('skill', skill);
+      else url.searchParams.delete('skill');
+      history.replaceState(null, '', url);
+    };
+
+    for (const b of buttons) b.addEventListener('click', () => apply(b.dataset.skill ?? '', true));
+    const initial = new URLSearchParams(location.search).get('skill') ?? '';
+    if (buttons.some((b) => b.dataset.skill === initial)) apply(initial, false);
+  }
+</script>
+
+<style>
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .filter span {
+    margin-right: 0.5rem;
+    color: var(--muted);
+  }
+  .filter button {
+    min-height: 2.75rem;
+    padding: 0.4em 1.1em;
+    border: 0;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: var(--step-small);
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 160ms var(--ease),
+      transform 160ms var(--ease-out);
+  }
+  .filter button:hover {
+    background: var(--surface-2);
+  }
+  .filter button:active {
+    transform: scale(0.95);
+  }
+  .filter button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .rows {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .row {
+    position: relative;
+    display: grid;
+    gap: 0.35rem 2rem;
+    align-items: baseline;
+    padding: clamp(1.1rem, 2.2vw, 1.75rem) clamp(1rem, 2vw, 1.75rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      background-color 240ms var(--ease),
+      color 240ms var(--ease);
+  }
+  @media (min-width: 64rem) {
+    .row {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) 15rem;
+    }
+  }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-lead);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    transition: transform 360ms var(--ease-out);
+  }
+  .question {
+    max-width: 52ch;
+    line-height: 1.4;
+  }
+  @media (min-width: 64rem) {
+    .stack {
+      text-align: right;
+    }
+  }
+  .stack {
+    color: var(--muted);
+    font-size: var(--step-small);
+    transition: color 240ms var(--ease);
+  }
+  /* The whole row takes the accent on hover or keyboard focus. */
+  .row:hover,
+  .row:focus-visible {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .row:hover .stack,
+  .row:focus-visible .stack {
+    color: var(--accent-ink);
+  }
+  .row:hover .title,
+  .row:focus-visible .title {
+    transform: translateX(0.75rem);
+  }
+  .empty {
+    margin-top: 1.5rem;
+    color: var(--muted);
+  }
+  [hidden] {
+    display: none !important;
+  }
+</style>

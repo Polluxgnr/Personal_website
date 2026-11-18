@@ -1,0 +1,75 @@
+---
+import type { Localized } from '../lib/schema.ts';
+import { pick, type Lang } from '../i18n/ui.ts';
+
+export interface TimelineItem {
+  what: string;
+  where: string;
+  when: string;
+  points: readonly Localized[];
+}
+
+interface Props {
+  lang: Lang;
+  items: readonly TimelineItem[];
+}
+
+const { lang, items } = Astro.props;
+---
+
+<ol class="timeline" role="list" data-reveal-group>
+  {items.map((item) => (
+    <li data-reveal>
+      <p class="when">{item.when}</p>
+      <div>
+        <h3>{item.what}</h3>
+        <p class="where">{item.where}</p>
+        <ul>
+          {item.points.map((point) => (
+            <li>{pick(point, lang)}</li>
+          ))}
+        </ul>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .timeline > li {
+    display: grid;
+    gap: 0.5rem 2.5rem;
+    padding: clamp(1.25rem, 2.4vw, 2rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+  }
+  @media (min-width: 48rem) {
+    .timeline > li {
+      grid-template-columns: 11rem minmax(0, 1fr);
+    }
+  }
+  .when {
+    color: var(--muted);
+    font-size: var(--step-small);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.2em;
+  }
+  .where {
+    margin-top: 0.3rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  ul {
+    max-width: var(--measure);
+    margin-top: 0.75rem;
+    padding-left: 1.1em;
+  }
+  ul li + li {
+    margin-top: 0.3em;
+  }
+</style>

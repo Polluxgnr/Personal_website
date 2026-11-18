@@ -1,0 +1,285 @@
+@import '@fontsource-variable/unbounded/wght.css';
+@import '@fontsource-variable/hanken-grotesk/wght.css';
+
+@layer reset, tokens, base, layout, components, utilities;
+
+/* Pages cross-fade into each other, and a project's title travels from the list to its page. */
+@view-transition {
+  navigation: auto;
+}
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  * {
+    margin: 0;
+  }
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  p,
+  h1,
+  h2,
+  h3,
+  h4 {
+    overflow-wrap: break-word;
+  }
+}
+
+@layer tokens {
+  /* Three tints of one design. "night" is the default; the switcher in the header sets data-theme. */
+  :root,
+  :root[data-theme='night'] {
+    color-scheme: dark;
+    --bg: #0a0a0b;
+    --surface: #151517;
+    --surface-2: #222225;
+    --ink: #f5f4f0;
+    --muted: #a3a3a8;
+    --accent: #ff5a1f;
+    --accent-ink: #0a0a0b;
+    --danger: #ff8a7a;
+  }
+  :root[data-theme='paper'] {
+    color-scheme: light;
+    --bg: #f4f3ef;
+    --surface: #e8e6df;
+    --surface-2: #d9d6cd;
+    --ink: #111113;
+    --muted: #55555c;
+    --accent: #1d3dff;
+    --accent-ink: #ffffff;
+    --danger: #b3261e;
+  }
+  :root[data-theme='abyss'] {
+    color-scheme: dark;
+    --bg: #06101d;
+    --surface: #0e1c30;
+    --surface-2: #182a44;
+    --ink: #eef3f8;
+    --muted: #9db0c4;
+    --accent: #5eead4;
+    --accent-ink: #06101d;
+    --danger: #ff9d8f;
+  }
+
+  :root {
+    --font-display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
+    --font-text: 'Hanken Grotesk Variable', 'Helvetica Neue', Arial, sans-serif;
+
+    --step-small: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+    --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+    --step-head: clamp(2rem, 1.2rem + 3.6vw, 4.5rem);
+    --step-display: clamp(2.75rem, 0.6rem + 8vw, 8.5rem);
+
+    --margin: clamp(1.25rem, 0.5rem + 2.6vw, 3rem);
+    --section-gap: clamp(6rem, 4rem + 8vw, 12rem);
+    --measure: 62ch;
+    --page: 92rem;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+    background: var(--bg);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    /* The page colour lives on <html>, so the background canvas can show through. */
+    color: var(--ink);
+    font-family: var(--font-text);
+    font-size: var(--step-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 400ms var(--ease),
+      color 400ms var(--ease);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: var(--step-head);
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: var(--step-head);
+    text-transform: uppercase;
+  }
+  h3 {
+    font-size: var(--step-lead);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    transition: color 160ms var(--ease);
+  }
+  a:hover {
+    color: var(--accent);
+  }
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+@layer layout {
+  .wrap {
+    width: min(100% - 2 * var(--margin), var(--page));
+    margin-inline: auto;
+  }
+  .section {
+    padding-block: var(--section-gap) 0;
+  }
+  .page {
+    padding-block-start: clamp(3rem, 2rem + 5vw, 7rem);
+  }
+  .lede {
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+}
+
+@layer components {
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.5rem;
+    padding: 0.8em 1.8em;
+    border: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    font-size: var(--step-body);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      transform 220ms var(--ease-out),
+      filter 180ms var(--ease);
+    will-change: transform;
+  }
+  .button:hover {
+    color: var(--accent-ink);
+    filter: brightness(1.1);
+  }
+  .button:active {
+    transform: scale(0.96);
+  }
+  .button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .text-link {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step-small);
+  }
+  .tags li {
+    padding: 0.3em 0.9em;
+    border-radius: 999px;
+    background: var(--surface);
+  }
+}
+
+@layer utilities {
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  /* Parts the motion layer reveals. Hidden only once the script has marked the page ready. */
+  html.motion-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  /* A heading split into words that rise from behind their own line. */
+  [data-words] .w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.08em;
+  }
+  [data-words] .w > span {
+    display: inline-block;
+  }
+  html.motion-ready [data-words] .w > span {
+    transform: translateY(110%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html.motion-ready [data-reveal],
+    html.motion-ready [data-words] .w > span {
+      opacity: 1;
+      transform: none;
+    }
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+}

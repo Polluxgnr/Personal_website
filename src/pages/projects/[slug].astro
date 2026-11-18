@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ProjectPage from '../../components/ProjectPage.astro';
+import { projects } from '../../lib/data.ts';
+
+export const getStaticPaths = (() =>
+  projects.map((project) => ({
+    params: { slug: project.repo.toLowerCase() },
+    props: { project },
+  }))) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+---
+
+<ProjectPage lang="en" project={project} />

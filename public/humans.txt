@@ -1,0 +1,14 @@
+/* TEAM */
+Developer, designer, copywriter, tester, coffee maker: Pollux Gronier
+Site: https://polluxgronier.me
+Contact: https://polluxgronier.me/contact/
+Location: Paris, France (Madrid from January 2027)
+
+/* THANKS */
+Eliott, Saty, Augustin and Neel, for the group projects behind several of these pages.
+
+/* SITE */
+Built with: Astro, TypeScript, Motion, plain CSS
+Hosted on: GitHub Pages
+Trackers: none
+Cookies: none (one tint preference lives in your browser)

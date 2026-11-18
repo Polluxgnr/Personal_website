@@ -1,0 +1,145 @@
+---
+import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const fr = lang === 'fr';
+const format = new Intl.NumberFormat(lang === 'fr' ? 'fr-FR' : 'en-GB');
+
+// Every figure comes from a README or my CV, and each card links to where it comes from.
+const stats = [
+  {
+    n: 60000,
+    prefix: '',
+    label: fr
+      ? 'demandes techniques triées par un pipeline NLP chez Enedis'
+      : 'maintenance requests sorted by an NLP pipeline at Enedis',
+    href: localizePath('/about/#experience', lang),
+  },
+  {
+    n: 265,
+    prefix: '',
+    label: fr
+      ? 'cours notés par mon planificateur d’emploi du temps pour l’UC3M'
+      : 'courses scored by my UC3M timetable planner',
+    href: localizePath('/projects/uc3m-course-planner/', lang),
+  },
+  {
+    n: 170,
+    prefix: '~',
+    label: fr
+      ? 'actions d’Euronext passées en revue chaque jour de bourse'
+      : 'Euronext stocks screened every trading day',
+    href: localizePath('/projects/peatrading/', lang),
+  },
+  {
+    n: 1825,
+    prefix: '',
+    label: fr
+      ? 'unités de réacteurs dans mon modèle de coût du nucléaire'
+      : 'reactor units in my nuclear cost model',
+    href: localizePath('/projects/nuclear-capital-risk/', lang),
+  },
+];
+---
+
+<section class="section wrap" aria-labelledby="stats-title">
+  <div class="section-head">
+    <h2 id="stats-title" data-words>
+      {fr ? 'Des chiffres, avec les preuves' : 'Numbers, with receipts'}
+    </h2>
+    <p class="note">
+      {fr ? 'Chacun renvoie à sa source.' : 'Each one links to where it comes from.'}
+    </p>
+  </div>
+  <ul class="stats" role="list" data-reveal-group>
+    {stats.map((s) => (
+      <li data-reveal>
+        <a href={s.href} data-stat>
+          <span class="num">
+            {s.prefix}
+            <span data-count={s.n} data-locale={lang}>
+              {format.format(s.n)}
+            </span>
+          </span>
+          <span class="label">{s.label}</span>
+          <span class="more">{t('work.details')}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .note {
+    color: var(--muted);
+  }
+  .stats {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  @media (min-width: 40rem) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 80rem) {
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  a {
+    display: grid;
+    gap: 0.75rem;
+    align-content: space-between;
+    height: 100%;
+    min-height: 15rem;
+    padding: clamp(1.25rem, 2.2vw, 1.75rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+    text-decoration: none;
+    transition:
+      background-color 240ms var(--ease),
+      color 240ms var(--ease),
+      transform 360ms var(--ease-out);
+  }
+  .num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .label {
+    line-height: 1.4;
+  }
+  .more {
+    color: var(--muted);
+    font-size: var(--step-small);
+    font-weight: 600;
+    transition: color 240ms var(--ease);
+  }
+  a:hover,
+  a:focus-visible {
+    background: var(--accent);
+    color: var(--accent-ink);
+    transform: translateY(-4px);
+  }
+  a:hover .more,
+  a:focus-visible .more {
+    color: var(--accent-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    a:hover,
+    a:focus-visible {
+      transform: none;
+    }
+  }
+</style>

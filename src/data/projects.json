@@ -1,0 +1,1250 @@
+[
+  {
+    "repo": "shockgraph-pea",
+    "title": "ShockGraph PEA",
+    "question": {
+      "en": "If oil goes up 20%, what happens to my PEA, and through which links?",
+      "fr": "Si le pétrole prend 20 %, que devient mon PEA, et par quels liens ?"
+    },
+    "summary": {
+      "en": "A Neo4j graph of PEA-eligible stocks, their sectors, countries, commodities, currencies and the ETFs that hold them. It shows what a portfolio is really exposed to, simulates how a shock spreads, and explains it through a local LangGraph agent that labels every number as a fact, an estimate, a prediction or a hypothesis.",
+      "fr": "Un graphe Neo4j des actions éligibles au PEA, de leurs secteurs, pays, matières premières, devises et des ETF qui les détiennent. Il montre l'exposition réelle d'un portefeuille, simule la propagation d'un choc et l'explique avec un agent LangGraph local qui étiquette chaque chiffre : fait, estimation, prédiction ou hypothèse."
+    },
+    "highlights": [
+      {
+        "en": "Look-through of ETFs down to companies, aggregated by sector, country and factor.",
+        "fr": "Transparence des ETF jusqu'aux entreprises, agrégée par secteur, pays et facteur."
+      },
+      {
+        "en": "Graph Data Science on the residual correlation network: Louvain communities, PageRank, FastRP embeddings.",
+        "fr": "Graph Data Science sur le réseau de corrélations résiduelles : communautés de Louvain, PageRank, embeddings FastRP."
+      },
+      {
+        "en": "The agent refuses investment advice by rule and a verifier strips unsupported claims.",
+        "fr": "L'agent refuse tout conseil d'investissement et un vérificateur retire les affirmations non sourcées."
+      }
+    ],
+    "stack": ["Neo4j", "Graph Data Science", "LangGraph", "FastAPI", "Docker", "Python"],
+    "skills": ["Graphs", "NLP & LLMs", "Finance", "Data engineering"],
+    "category": "ai",
+    "featured": true,
+    "order": 1,
+    "pushedAt": "2026-11-02",
+    "readmeSha": "43edd1356dc7c5d608073b7a8916aba12945e11a",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "More and more French students open a PEA and stack a World ETF, an S&P 500 ETF and a few stocks, thinking they are diversified. Two “World” ETFs can hold the same 1,500 companies. I wanted a tool that shows what a portfolio is really exposed to. Built for the GraphDB course with Eliott Beghin and Saty Viard Laroque.",
+      "fr": "De plus en plus d’étudiants ouvrent un PEA et empilent un ETF Monde, un ETF S&P 500 et quelques actions en se croyant diversifiés. Deux ETF « Monde » peuvent contenir les mêmes 1 500 entreprises. Je voulais un outil qui montre l’exposition réelle d’un portefeuille. Projet du cours GraphDB, avec Eliott Beghin et Saty Viard Laroque."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "A graph of the market",
+          "fr": "Un graphe du marché"
+        },
+        "detail": {
+          "en": "PEA-eligible stocks, sectors, countries, commodities, currencies and the ETFs that hold them, stored as nodes and links in Neo4j.",
+          "fr": "Actions éligibles au PEA, secteurs, pays, matières premières, devises et ETF qui les détiennent, stockés comme nœuds et liens dans Neo4j."
+        }
+      },
+      {
+        "title": {
+          "en": "Look-through",
+          "fr": "Transparence"
+        },
+        "detail": {
+          "en": "Fund → index → company, then aggregated by company, sector, country and factor, so overlapping ETFs show up.",
+          "fr": "Fonds → indice → entreprise, puis agrégation par entreprise, secteur, pays et facteur : les ETF qui se recoupent apparaissent."
+        }
+      },
+      {
+        "title": {
+          "en": "Shock simulation",
+          "fr": "Simulation de choc"
+        },
+        "detail": {
+          "en": "Direct impact is beta × shock (an estimate); declared producers and consumers are facts; one more hop through news-based links is only a hypothesis, with no number.",
+          "fr": "L’impact direct est bêta × choc (une estimation) ; producteurs et consommateurs déclarés sont des faits ; un cran de plus via des liens issus des actualités reste une hypothèse, sans chiffre."
+        }
+      },
+      {
+        "title": {
+          "en": "Graph Data Science",
+          "fr": "Graph Data Science"
+        },
+        "detail": {
+          "en": "Louvain communities, PageRank and FastRP embeddings on the residual correlation network answer “which stocks move together?”.",
+          "fr": "Communautés de Louvain, PageRank et embeddings FastRP sur le réseau de corrélations résiduelles répondent à « quelles actions bougent ensemble ? »."
+        }
+      },
+      {
+        "title": {
+          "en": "A careful agent",
+          "fr": "Un agent prudent"
+        },
+        "detail": {
+          "en": "A local LangGraph agent with typed tools and a guarded Cypher fallback. It refuses investment advice by rule, and a verifier strips every claim the evidence does not support.",
+          "fr": "Un agent LangGraph local avec des outils typés et un repli Cypher encadré. Il refuse tout conseil d’investissement par règle, et un vérificateur retire chaque affirmation que les preuves ne soutiennent pas."
+        }
+      },
+      {
+        "title": {
+          "en": "FastAPI on top",
+          "fr": "FastAPI par-dessus"
+        },
+        "detail": {
+          "en": "X-ray, shock, path and cluster endpoints; every number comes with its truth level (fact, estimate, prediction, hypothesis).",
+          "fr": "Endpoints de radiographie, de choc, de chemins et de clusters ; chaque chiffre porte son niveau de vérité (fait, estimation, prédiction, hypothèse)."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "cinegraph",
+    "title": "CineGraph",
+    "question": {
+      "en": "Can an app learn my taste in films, music and food from a few swipes, and explain every pick?",
+      "fr": "Une appli peut-elle apprendre mes goûts en films, musique et cuisine en quelques swipes, et justifier chaque choix ?"
+    },
+    "summary": {
+      "en": "A personal taste engine that runs entirely in the browser. A weekly GitHub Actions job builds a knowledge graph, text embeddings and a collaborative-filtering model from TMDB, Wikidata and MovieLens; the app then ranks, learns online from each answer and keeps its memory on the device.",
+      "fr": "Un moteur de goûts personnel qui tourne entièrement dans le navigateur. Un job GitHub Actions hebdomadaire construit un graphe de connaissances, des embeddings et un modèle de filtrage collaboratif à partir de TMDB, Wikidata et MovieLens ; l'appli classe, apprend en ligne à chaque réponse et garde sa mémoire sur l'appareil."
+    },
+    "highlights": [
+      {
+        "en": "Hybrid ranking: knowledge-graph paths, embeddings and implicit ALS, folded in on the device.",
+        "fr": "Classement hybride : chemins dans le graphe, embeddings et ALS implicite, calculés sur l'appareil."
+      },
+      {
+        "en": "Active learning picks the next card; a logistic ranker and a Thompson bandit adapt to each answer.",
+        "fr": "L'apprentissage actif choisit la carte suivante ; un ranker logistique et un bandit de Thompson s'adaptent à chaque réponse."
+      },
+      {
+        "en": "Installable PWA with no server: static export on GitHub Pages, memory in IndexedDB.",
+        "fr": "PWA installable sans serveur : export statique sur GitHub Pages, mémoire dans IndexedDB."
+      }
+    ],
+    "stack": [
+      "Python",
+      "PostgreSQL",
+      "pgvector",
+      "implicit ALS",
+      "Next.js",
+      "IndexedDB",
+      "GitHub Actions"
+    ],
+    "skills": ["Machine learning", "Graphs", "Data engineering", "Web & apps"],
+    "category": "ai",
+    "featured": true,
+    "order": 2,
+    "homepage": "https://polluxgnr.github.io/cinegraph/",
+    "pushedAt": "2026-11-10",
+    "readmeSha": "f1e10930771682bab230500dec949f30cc6b922c",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "I wanted a taste engine that explains every recommendation and runs without a server, so that my memory stays on my own device. Films, series, music, recipes, travel, cars and style, all learned from a few swipes.",
+      "fr": "Je voulais un moteur de goûts qui explique chaque recommandation et fonctionne sans serveur, pour que ma mémoire reste sur mon appareil. Films, séries, musique, recettes, voyages, voitures et style, appris en quelques swipes."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Weekly data build",
+          "fr": "Collecte hebdomadaire"
+        },
+        "detail": {
+          "en": "A GitHub Actions job pulls TMDB, Wikidata and MovieLens into Postgres with pgvector.",
+          "fr": "Un job GitHub Actions récupère TMDB, Wikidata et MovieLens dans Postgres avec pgvector."
+        }
+      },
+      {
+        "title": {
+          "en": "Three kinds of signal",
+          "fr": "Trois types de signal"
+        },
+        "detail": {
+          "en": "A knowledge graph, text embeddings (fastembed bge-small) and a collaborative-filtering model (implicit ALS).",
+          "fr": "Un graphe de connaissances, des embeddings de texte (fastembed bge-small) et un modèle de filtrage collaboratif (ALS implicite)."
+        }
+      },
+      {
+        "title": {
+          "en": "Static export",
+          "fr": "Export statique"
+        },
+        "detail": {
+          "en": "JSON and int8 matrices are published as a release asset and served by GitHub Pages: no backend at all.",
+          "fr": "JSON et matrices int8 publiés comme ressource de release et servis par GitHub Pages : aucun backend."
+        }
+      },
+      {
+        "title": {
+          "en": "Ranking in the browser",
+          "fr": "Classement dans le navigateur"
+        },
+        "detail": {
+          "en": "The PWA ranks with features, graph paths and a collaborative-filtering fold-in, all computed on the device.",
+          "fr": "La PWA classe avec des variables, des chemins dans le graphe et un repliement du filtrage collaboratif, le tout calculé sur l’appareil."
+        }
+      },
+      {
+        "title": {
+          "en": "Learning from each answer",
+          "fr": "Apprendre de chaque réponse"
+        },
+        "detail": {
+          "en": "Bayesian active learning picks the next card; a logistic ranker and a Thompson bandit adapt. Memory lives in IndexedDB.",
+          "fr": "L’apprentissage actif bayésien choisit la carte suivante ; un ranker logistique et un bandit de Thompson s’adaptent. La mémoire vit dans IndexedDB."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Peatrading",
+    "title": "PEA Pollux",
+    "question": {
+      "en": "What does a real quant pipeline look like end to end, from raw prices to a trade I'd actually consider?",
+      "fr": "À quoi ressemble un vrai pipeline quant de bout en bout, des prix bruts à un trade que j'envisagerais vraiment ?"
+    },
+    "summary": {
+      "en": "A decision-support system for my French PEA. Every trading day it scans about 170 Euronext stocks, scores them, runs each candidate through risk checks and sends the few that survive with a position size and limit prices. It never places orders.",
+      "fr": "Un outil d'aide à la décision pour mon PEA. Chaque jour de bourse, il analyse environ 170 actions d'Euronext, les note, soumet chaque candidate à des contrôles de risque et m'envoie les rares survivantes avec une taille de position et des prix limites. Il ne passe jamais d'ordre."
+    },
+    "highlights": [
+      {
+        "en": "Signals from mean reversion, sector pairs trading, a 3-state HMM market regime and FinBERT sentiment.",
+        "fr": "Signaux : retour à la moyenne, pairs trading sectoriel, régime de marché par HMM à 3 états, sentiment FinBERT."
+      },
+      {
+        "en": "XGBoost with SHAP estimates each trade's odds; a UCB bandit re-weights strategies by regime.",
+        "fr": "XGBoost avec SHAP estime les chances de chaque trade ; un bandit UCB repondère les stratégies selon le régime."
+      },
+      {
+        "en": "Streamlit dashboard over a FastAPI service, Discord alerts, and an MCP server to query the portfolio.",
+        "fr": "Dashboard Streamlit sur une API FastAPI, alertes Discord, et un serveur MCP pour interroger le portefeuille."
+      }
+    ],
+    "stack": [
+      "Python",
+      "DuckDB",
+      "XGBoost",
+      "hmmlearn",
+      "Transformers",
+      "FastAPI",
+      "Streamlit",
+      "Docker"
+    ],
+    "skills": ["Machine learning", "Time series & econometrics", "Finance", "Data engineering"],
+    "category": "finance",
+    "featured": true,
+    "order": 3,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "18a77c33f5d81bc203963d0d340dc52270b2d53f",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "I built it to learn how a real quant pipeline is put together, end to end (ingestion, storage, signals, risk, reporting), rather than to beat the market. It never places orders: I read the results and decide.",
+      "fr": "Je l’ai construit pour apprendre comment s’assemble un vrai pipeline quant, de bout en bout (ingestion, stockage, signaux, risque, reporting), pas pour battre le marché. Il ne passe jamais d’ordre : je lis les résultats et je décide."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Data",
+          "fr": "Données"
+        },
+        "detail": {
+          "en": "Prices from yfinance, fundamentals, AMF insider trades and short positions, ECB rates, RSS headlines. Raw payloads are kept so any run can be replayed.",
+          "fr": "Prix yfinance, fondamentaux, opérations d’initiés et positions courtes de l’AMF, taux de la BCE, flux RSS. Les données brutes sont conservées pour rejouer n’importe quel passage."
+        }
+      },
+      {
+        "title": {
+          "en": "Storage",
+          "fr": "Stockage"
+        },
+        "detail": {
+          "en": "Prices in DuckDB, portfolio and audit log in SQLite, Pydantic models and a quality gate that catches outliers and stock splits.",
+          "fr": "Prix dans DuckDB, portefeuille et journal d’audit dans SQLite, modèles Pydantic et un contrôle qualité qui repère valeurs aberrantes et fractionnements."
+        }
+      },
+      {
+        "title": {
+          "en": "Signals",
+          "fr": "Signaux"
+        },
+        "detail": {
+          "en": "Mean reversion, sector pairs trading, a 3-state HMM market regime, FinBERT sentiment, and an XGBoost model with SHAP; a UCB bandit re-weights strategies by regime.",
+          "fr": "Retour à la moyenne, pairs trading sectoriel, régime de marché HMM à 3 états, sentiment FinBERT, et un modèle XGBoost avec SHAP ; un bandit UCB repondère les stratégies selon le régime."
+        }
+      },
+      {
+        "title": {
+          "en": "Risk checks",
+          "fr": "Contrôles de risque"
+        },
+        "detail": {
+          "en": "A candidate is rejected if any check fails, and the reason is logged: loss limits, drawdown brake, volatility regime, blackout days, Piotroski score, liquidity.",
+          "fr": "Une candidate est rejetée si un contrôle échoue, et la raison est journalisée : limites de perte, frein de drawdown, régime de volatilité, jours d’exclusion, score de Piotroski, liquidité."
+        }
+      },
+      {
+        "title": {
+          "en": "Output",
+          "fr": "Sorties"
+        },
+        "detail": {
+          "en": "A Streamlit dashboard over a FastAPI service, Discord alerts with ATR-based limit prices, and an MCP server to question the portfolio.",
+          "fr": "Un dashboard Streamlit sur une API FastAPI, des alertes Discord avec prix limites basés sur l’ATR, et un serveur MCP pour interroger le portefeuille."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "uc3m-course-planner",
+    "title": "UC3M Course Planner",
+    "question": {
+      "en": "Which exchange-semester timetable at UC3M is provably the best one for me?",
+      "fr": "Quel emploi du temps d'échange à l'UC3M est, de façon prouvée, le meilleur pour moi ?"
+    },
+    "summary": {
+      "en": "Scrapes every bachelor open to exchange students at UC3M's School of Engineering (265 courses, 650 groups), scores each syllabus, then runs an exact branch-and-bound search for the best clash-free plans and ranked fallbacks for each course.",
+      "fr": "Récupère toutes les licences ouvertes aux étudiants d'échange de l'école d'ingénieurs de l'UC3M (265 cours, 650 groupes), note chaque syllabus, puis lance une recherche exacte par séparation et évaluation des meilleurs plans sans conflit, avec des solutions de repli classées pour chaque cours."
+    },
+    "highlights": [
+      {
+        "en": "Optimiser runs in a Web Worker and says when its search is exhaustive.",
+        "fr": "L'optimiseur tourne dans un Web Worker et indique quand sa recherche est exhaustive."
+      },
+      {
+        "en": "Three ways in: a seven-question wizard, an AI advisor with tool calls, or manual sliders.",
+        "fr": "Trois entrées : un assistant en sept questions, un conseiller IA avec appels d'outils, ou des curseurs manuels."
+      }
+    ],
+    "stack": ["JavaScript", "Python", "Web Workers", "GitHub Pages"],
+    "skills": ["Optimisation & simulation", "Data engineering", "Web & apps", "NLP & LLMs"],
+    "category": "tools",
+    "featured": true,
+    "order": 4,
+    "homepage": "https://polluxgnr.github.io/uc3m-course-planner/",
+    "pushedAt": "2026-10-29",
+    "readmeSha": "7413fcbd5320fe6d99f7483784238a35130def31",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Choosing courses for an exchange semester means juggling 19 degree pages, a separate timetable site, hundreds of syllabi and a Learning Agreement that needs fallbacks. I’m going to UC3M in January, so I built the tool I needed.",
+      "fr": "Choisir ses cours pour un semestre d’échange, c’est jongler entre 19 pages de diplômes, un site d’emplois du temps, des centaines de syllabus et un Learning Agreement qui exige des solutions de repli. Je pars à l’UC3M en janvier, j’ai donc construit l’outil dont j’avais besoin."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Scrape everything",
+          "fr": "Tout récupérer"
+        },
+        "detail": {
+          "en": "Study plans, every teaching group week by week, and each syllabus: 265 courses and 650 groups.",
+          "fr": "Plans d’études, chaque groupe d’enseignement semaine par semaine, et chaque syllabus : 265 cours et 650 groupes."
+        }
+      },
+      {
+        "title": {
+          "en": "Read the syllabi",
+          "fr": "Lire les syllabus"
+        },
+        "detail": {
+          "en": "Each course is scored for maths load, hands-on work, and AI and software focus, and tagged with its final-exam share and deadline weeks.",
+          "fr": "Chaque cours est noté sur la charge en maths, le travail pratique et l’orientation IA et logiciel, avec la part de l’examen final et les semaines de rendus."
+        }
+      },
+      {
+        "title": {
+          "en": "Exact optimiser",
+          "fr": "Optimiseur exact"
+        },
+        "detail": {
+          "en": "Branch and bound in a Web Worker finds the three best clash-free 30-ECTS plans for your weights, and says when the search is exhaustive.",
+          "fr": "Une recherche par séparation et évaluation dans un Web Worker trouve les trois meilleurs plans de 30 ECTS sans conflit selon vos poids, et indique quand la recherche est exhaustive."
+        }
+      },
+      {
+        "title": {
+          "en": "Fallbacks",
+          "fr": "Solutions de repli"
+        },
+        "detail": {
+          "en": "Every course comes with ranked alternatives (other groups, replacement courses), each scored by the whole plan after the swap.",
+          "fr": "Chaque cours vient avec des alternatives classées (autres groupes, cours de remplacement), chacune notée sur l’ensemble du plan après l’échange."
+        }
+      },
+      {
+        "title": {
+          "en": "Three ways in",
+          "fr": "Trois entrées"
+        },
+        "detail": {
+          "en": "A seven-question wizard, an AI advisor that calls tools (bring your own key), or manual sliders. All of it is a static page on GitHub Pages.",
+          "fr": "Un assistant en sept questions, un conseiller IA qui appelle des outils (votre propre clé), ou des curseurs manuels. Le tout est une page statique sur GitHub Pages."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "nuclear-capital-risk",
+    "title": "Nuclear capital risk",
+    "question": {
+      "en": "Extend old nuclear reactors by 20 years or build new ones: which costs less, in money and in CO₂?",
+      "fr": "Prolonger de 20 ans les vieux réacteurs ou en construire de nouveaux : qu'est-ce qui coûte le moins, en argent et en CO₂ ?"
+    },
+    "summary": {
+      "en": "A cost-of-capital, LCOE and CO₂ model on the Global Energy Monitor tracker (1,825 units). 44% of operating capacity is already past 40 years; replacing it with gas would add about 558 Mt of CO₂ a year, and a 4-point rise in the cost of capital more than doubles the cost of a 10-year build.",
+      "fr": "Un modèle de coût du capital, de LCOE et de CO₂ sur la base Global Energy Monitor (1 825 unités). 44 % de la capacité en service a déjà plus de 40 ans ; la remplacer par du gaz ajouterait environ 558 Mt de CO₂ par an, et 4 points de coût du capital en plus font plus que doubler le coût d'un chantier de 10 ans."
+    },
+    "highlights": [
+      {
+        "en": "S-curve construction spending with compounding interest during construction.",
+        "fr": "Dépenses de construction en courbe en S avec intérêts intercalaires composés."
+      },
+      {
+        "en": "Sensitivity grids and three 20-year pathways: extend, new build, gas.",
+        "fr": "Grilles de sensibilité et trois trajectoires sur 20 ans : prolongation, neuf, gaz."
+      }
+    ],
+    "stack": ["Python", "pandas", "Streamlit", "pixi"],
+    "skills": ["Finance", "Time series & econometrics", "Data engineering"],
+    "category": "data",
+    "featured": true,
+    "order": 5,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "c9acda3ad6cee8372fa59620ada90fbd8e76ed44",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "A large share of the world’s reactors are passing their 40-year design life. Is it better, in cost and in CO₂, to extend them by 20 years or to replace them? Group project for the Climate Risks course with Eliott Beghin, Saty Viard Laroque and Neel Sabarwhal, in the role of sustainability consultants to a utility board.",
+      "fr": "Une grande part des réacteurs du monde dépasse sa durée de conception de 40 ans. Vaut-il mieux, en coût et en CO₂, les prolonger de 20 ans ou les remplacer ? Projet du cours Climate Risks avec Eliott Beghin, Saty Viard Laroque et Neel Sabarwhal, dans le rôle de consultants en durabilité auprès du conseil d’une compagnie d’électricité."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Clean the fleet",
+          "fr": "Nettoyer le parc"
+        },
+        "detail": {
+          "en": "Parse dates from the Global Energy Monitor tracker (1,825 units), compute build times and ages, flag reactors past 40 years.",
+          "fr": "Lecture des dates du suivi Global Energy Monitor (1 825 unités), calcul des durées de construction et des âges, repérage des réacteurs de plus de 40 ans."
+        }
+      },
+      {
+        "title": {
+          "en": "Financial model",
+          "fr": "Modèle financier"
+        },
+        "detail": {
+          "en": "Construction spending follows an S-curve (Beta 2.5, 2.5), interest during construction compounds mid-year, and LCOE uses a capital recovery factor.",
+          "fr": "Les dépenses de construction suivent une courbe en S (Beta 2,5 ; 2,5), les intérêts intercalaires se composent à mi-année, et le LCOE utilise un facteur de récupération du capital."
+        }
+      },
+      {
+        "title": {
+          "en": "Sensitivity",
+          "fr": "Sensibilité"
+        },
+        "detail": {
+          "en": "Grids cross the cost of capital with build time, so a 4-point rise in financing cost can be read directly.",
+          "fr": "Des grilles croisent le coût du capital et la durée de chantier, pour lire directement l’effet d’une hausse de 4 points du coût de financement."
+        }
+      },
+      {
+        "title": {
+          "en": "Three pathways",
+          "fr": "Trois trajectoires"
+        },
+        "detail": {
+          "en": "Extend, build new, or replace with gas, over 20 years, with maps, age pyramid and heatmaps. Costs come from IEA/NEA, discount rates from Damodaran, emission factors from IPCC AR6.",
+          "fr": "Prolonger, construire du neuf ou remplacer par du gaz, sur 20 ans, avec cartes, pyramide des âges et heatmaps. Coûts AIE/AEN, taux d’actualisation de Damodaran, facteurs d’émission du GIEC AR6."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Cdm-analysis",
+    "title": "World Cup 2026 model",
+    "question": {
+      "en": "How do my 2026 World Cup probabilities compare with the bookmakers'?",
+      "fr": "Mes probabilités pour la Coupe du monde 2026 tiennent-elles face à celles des bookmakers ?"
+    },
+    "summary": {
+      "en": "A Streamlit dashboard that stacks Elo ratings, a Poisson goals model and a gradient-boosted classifier, blends them with bookmaker odds, and simulates the whole tournament by Monte Carlo. Once matches are played it scores itself with accuracy, Brier score and log-loss.",
+      "fr": "Un dashboard Streamlit qui empile classement Elo, modèle de Poisson sur les buts et classifieur à gradient boosting, les mélange avec les cotes des bookmakers et simule tout le tournoi par Monte-Carlo. Une fois les matchs joués, il s'évalue : précision, score de Brier et log-loss."
+    },
+    "highlights": [
+      {
+        "en": "Group stage with the best-third-placed rule, then a round-of-32 bracket.",
+        "fr": "Phase de groupes avec la règle des meilleurs troisièmes, puis tableau des seizièmes."
+      },
+      {
+        "en": "67 pytest tests in GitHub Actions.",
+        "fr": "67 tests pytest dans GitHub Actions."
+      }
+    ],
+    "stack": ["Python", "DuckDB", "XGBoost", "SHAP", "Streamlit"],
+    "skills": [
+      "Machine learning",
+      "Time series & econometrics",
+      "Web & apps",
+      "Optimisation & simulation"
+    ],
+    "category": "data",
+    "featured": true,
+    "order": 6,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "621d3a45443a2ed9f208ec9da18a24eb8ee551b0",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "A question I could test: do my probabilities for the 2026 World Cup hold up against the bookmakers’? Once matches are played, the dashboard scores itself.",
+      "fr": "Une question que je pouvais tester : mes probabilités pour la Coupe du monde 2026 tiennent-elles face à celles des bookmakers ? Une fois les matchs joués, le tableau de bord s’évalue lui-même."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Local data",
+          "fr": "Données locales"
+        },
+        "detail": {
+          "en": "FBref statistics (goals, xG, xA, line-ups) and optional bookmaker odds, all in DuckDB. Keys are optional: without them the app still runs.",
+          "fr": "Statistiques FBref (buts, xG, xA, compositions) et cotes facultatives, le tout dans DuckDB. Les clés sont facultatives : sans elles l’appli fonctionne quand même."
+        }
+      },
+      {
+        "title": {
+          "en": "Three models stacked",
+          "fr": "Trois modèles empilés"
+        },
+        "detail": {
+          "en": "Elo ratings, a Poisson model of goals (which also gives a score matrix) and a gradient-boosted classifier on match context.",
+          "fr": "Classement Elo, modèle de Poisson sur les buts (qui donne aussi une matrice de scores) et classifieur à gradient boosting sur le contexte du match."
+        }
+      },
+      {
+        "title": {
+          "en": "Blend with the market",
+          "fr": "Mélange avec le marché"
+        },
+        "detail": {
+          "en": "The final probability is a 50/50 blend of the stack and the bookmakers’ implied odds.",
+          "fr": "La probabilité finale est un mélange 50/50 de la pile de modèles et des cotes implicites des bookmakers."
+        }
+      },
+      {
+        "title": {
+          "en": "Tournament Monte Carlo",
+          "fr": "Monte-Carlo du tournoi"
+        },
+        "detail": {
+          "en": "800 runs over the 12 groups, including the best-third-placed rule, then a round-of-32 bracket with each team’s chance of reaching every round.",
+          "fr": "800 simulations des 12 groupes, avec la règle des meilleurs troisièmes, puis un tableau des seizièmes et la chance de chaque équipe d’atteindre chaque tour."
+        }
+      },
+      {
+        "title": {
+          "en": "Calibration",
+          "fr": "Calibration"
+        },
+        "detail": {
+          "en": "Accuracy, Brier score and log-loss against the real results. 67 pytest tests run in GitHub Actions.",
+          "fr": "Précision, score de Brier et log-loss face aux vrais résultats. 67 tests pytest tournent dans GitHub Actions."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "vintedbot",
+    "title": "Vinted Hunter",
+    "question": {
+      "en": "Can a bot spot the underpriced Vinted listings worth reselling before anyone else?",
+      "fr": "Un bot peut-il repérer avant tout le monde les annonces Vinted sous-cotées qui valent la revente ?"
+    },
+    "summary": {
+      "en": "Scans about 5,000 listings an hour across 19 niches, sends each one down a cost cascade from cheap filters to AI checks on text and photos and a live market comparison, and pushes only the real finds to Telegram.",
+      "fr": "Analyse environ 5 000 annonces par heure sur 19 niches, fait passer chacune dans une cascade de coûts, des filtres simples jusqu'aux vérifications IA sur le texte et les photos et à une comparaison avec le marché, et n'envoie sur Telegram que les vraies pépites."
+    },
+    "highlights": [
+      {
+        "en": "Every listing becomes a price observation in a growing sales database.",
+        "fr": "Chaque annonce devient une observation de prix dans une base de ventes qui grandit."
+      }
+    ],
+    "stack": ["Python", "Telegram Bot API"],
+    "skills": ["NLP & LLMs", "Data engineering"],
+    "category": "tools",
+    "featured": false,
+    "order": 10,
+    "pushedAt": "2026-11-02",
+    "readmeSha": "fccae8a16855051ebe546f265f3a4feb2e56d5ee",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Most listings are noise, and checking them with AI is slow and costly. So every listing goes down a funnel where cheap steps see everything and expensive steps see almost nothing.",
+      "fr": "La plupart des annonces sont du bruit, et les vérifier avec une IA est lent et coûteux. Chaque annonce descend donc un entonnoir où les étapes bon marché voient tout et les étapes coûteuses presque rien."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Scan",
+          "fr": "Balayage"
+        },
+        "detail": {
+          "en": "19 niches and about 290 reference models, 8 to 18 rotating queries each; around 5,000 listings an hour with 3 seconds between requests, and busy niches polled more often.",
+          "fr": "19 niches et environ 290 modèles de référence, 8 à 18 requêtes tournantes chacune ; environ 5 000 annonces par heure avec 3 secondes entre requêtes, et les niches actives interrogées plus souvent."
+        }
+      },
+      {
+        "title": {
+          "en": "Market memory",
+          "fr": "Mémoire du marché"
+        },
+        "detail": {
+          "en": "Every listing becomes a price observation, and matched models enter the sales database.",
+          "fr": "Chaque annonce devient une observation de prix, et les modèles reconnus alimentent la base de ventes."
+        }
+      },
+      {
+        "title": {
+          "en": "Cost cascade",
+          "fr": "Cascade de coûts"
+        },
+        "detail": {
+          "en": "Cheap filters first, then an AI check of text and photos, then a live comparison with the market.",
+          "fr": "D’abord des filtres simples, puis une vérification IA du texte et des photos, puis une comparaison avec le marché en direct."
+        }
+      },
+      {
+        "title": {
+          "en": "Telegram",
+          "fr": "Telegram"
+        },
+        "detail": {
+          "en": "Only the real finds are pushed, with buttons to analyse, negotiate and track profit.",
+          "fr": "Seules les vraies pépites sont envoyées, avec des boutons pour analyser, négocier et suivre le profit."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "application-assistant",
+    "title": "Application Assistant",
+    "question": {
+      "en": "Can a bot tailor my CV and cover letter to each offer without inventing skills I don't have?",
+      "fr": "Un bot peut-il adapter mon CV et ma lettre à chaque offre sans inventer des compétences que je n'ai pas ?"
+    },
+    "summary": {
+      "en": "A Discord bot built with n8n. It reads my CV once, compares each job offer with it, asks one question about what's missing, then writes a tailored CV, a cover letter and an interview cheat sheet in Google Docs.",
+      "fr": "Un bot Discord construit avec n8n. Il lit mon CV une fois, le compare à chaque offre, pose une seule question sur ce qui manque, puis rédige un CV adapté, une lettre de motivation et une fiche d'entretien dans Google Docs."
+    },
+    "highlights": [],
+    "stack": ["n8n", "PostgreSQL", "Docker", "Discord API", "Google Docs API"],
+    "skills": ["NLP & LLMs", "Data engineering"],
+    "category": "ai",
+    "featured": false,
+    "order": 11,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "d650031e496a78059a0a0067dfff60ea0998b9ff",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Students applying to many internships rewrite their CV and letter by hand for every offer, or paste the CV, the offer and a prompt into a chatbot each time, which also invents skills they don’t have. This bot only uses what I have confirmed.",
+      "fr": "Les étudiants qui postulent à beaucoup de stages réécrivent leur CV et leur lettre à la main pour chaque offre, ou collent CV, offre et prompt dans un chatbot à chaque fois, qui invente en plus des compétences qu’ils n’ont pas. Ce bot n’utilise que ce que j’ai confirmé."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "/cv",
+          "fr": "/cv"
+        },
+        "detail": {
+          "en": "Reads my CV once: an LLM turns the PDF into JSON, saved in Postgres.",
+          "fr": "Lit mon CV une seule fois : un LLM transforme le PDF en JSON, enregistré dans Postgres."
+        }
+      },
+      {
+        "title": {
+          "en": "/job",
+          "fr": "/job"
+        },
+        "detail": {
+          "en": "An LLM lists the offer’s requirements, then plain code compares them with my CV: a score out of 10, what is found, what is missing, and one question.",
+          "fr": "Un LLM liste les exigences de l’offre, puis du code classique les compare à mon CV : une note sur 10, ce qui est trouvé, ce qui manque, et une seule question."
+        }
+      },
+      {
+        "title": {
+          "en": "/answer",
+          "fr": "/answer"
+        },
+        "detail": {
+          "en": "Saves what I confirm, then writes the CV, a cover letter and an interview cheat sheet in the offer’s language, in about a minute, as Google Docs.",
+          "fr": "Enregistre ce que je confirme, puis rédige le CV, une lettre de motivation et une fiche d’entretien dans la langue de l’offre, en environ une minute, sous forme de Google Docs."
+        }
+      },
+      {
+        "title": {
+          "en": "Built to fail loudly",
+          "fr": "Conçu pour échouer bruyamment"
+        },
+        "detail": {
+          "en": "Signed Discord requests, a separate error workflow that reports the failing node, and every workflow exported to the repository.",
+          "fr": "Requêtes Discord signées, un workflow d’erreur distinct qui indique le nœud en échec, et chaque workflow exporté dans le dépôt."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Environemental-economics-",
+    "title": "Climate shocks and output",
+    "question": {
+      "en": "Do climate-shock years show up in GDP and crop output?",
+      "fr": "Les années de choc climatique se voient-elles dans le PIB et les récoltes ?"
+    },
+    "summary": {
+      "en": "ERA5 temperature and rainfall for 12 countries from 1940 to 2025, separating warming from year-to-year noise and seasons, then testing whether shock years appear in World Bank GDP and crop data.",
+      "fr": "Températures et précipitations ERA5 pour 12 pays de 1940 à 2025 : on sépare le réchauffement du bruit d'une année sur l'autre et des saisons, puis on teste si les années de choc apparaissent dans le PIB et les récoltes de la Banque mondiale."
+    },
+    "highlights": [
+      {
+        "en": "11 of 12 countries have warmed by more than twice the normal year-to-year swing.",
+        "fr": "11 pays sur 12 se sont réchauffés de plus de deux fois la variation normale d’une année à l’autre."
+      },
+      {
+        "en": "Crop output rises about 2.2% in a year with 10% more rain. GDP growth shows no detectable effect of temperature.",
+        "fr": "La production agricole augmente d’environ 2,2 % lors d’une année avec 10 % de pluie en plus. La croissance du PIB ne montre aucun effet détectable de la température."
+      }
+    ],
+    "stack": ["Python", "pandas", "ERA5", "World Bank API"],
+    "skills": ["Time series & econometrics", "Data engineering"],
+    "category": "data",
+    "featured": false,
+    "order": 12,
+    "pushedAt": "2026-11-09",
+    "readmeSha": "e16ad47e9021da427e67bbdf73a21770f56d7fba",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Track 1 of the Environmental Economics course: take 85 years of climate records for 12 countries, measure how far the climate has moved compared with ordinary year-to-year swings, and check whether the unusual years were also unusual for GDP and harvests. Group work with Eliott Beghin, Saty Viard Laroque and Augustin Vlandas.",
+      "fr": "Track 1 du cours d’Économie de l’environnement : prendre 85 ans de relevés climatiques de 12 pays, mesurer de combien le climat s’est éloigné des variations ordinaires d’une année à l’autre, et vérifier si les années inhabituelles l’étaient aussi pour le PIB et les récoltes. Travail de groupe avec Eliott Beghin, Saty Viard Laroque et Augustin Vlandas."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Climate data",
+          "fr": "Données climatiques"
+        },
+        "detail": {
+          "en": "ERA5 temperature and rainfall by country, 1940 to 2025, from the Copernicus Climate Atlas, against a 1961–1990 baseline.",
+          "fr": "Température et précipitations ERA5 par pays, de 1940 à 2025, issues du Copernicus Climate Atlas, face à une référence 1961-1990."
+        }
+      },
+      {
+        "title": {
+          "en": "Measure the shift",
+          "fr": "Mesurer le décalage"
+        },
+        "detail": {
+          "en": "How far each country has moved in units of its own ordinary year-to-year swing, overall and season by season.",
+          "fr": "De combien chaque pays s’est déplacé, en unités de sa propre variation ordinaire d’une année à l’autre, globalement et saison par saison."
+        }
+      },
+      {
+        "title": {
+          "en": "Join the economy",
+          "fr": "Relier l’économie"
+        },
+        "detail": {
+          "en": "World Bank GDP growth and crop output for the same country-years.",
+          "fr": "Croissance du PIB et production agricole de la Banque mondiale pour les mêmes pays et années."
+        }
+      },
+      {
+        "title": {
+          "en": "Panel models",
+          "fr": "Modèles de panel"
+        },
+        "detail": {
+          "en": "Country and year effects plus country trends, with every claim labelled description or correlation, never causation.",
+          "fr": "Effets pays et année plus tendances par pays, avec chaque affirmation étiquetée description ou corrélation, jamais causalité."
+        }
+      },
+      {
+        "title": {
+          "en": "Reproducible",
+          "fr": "Reproductible"
+        },
+        "detail": {
+          "en": "Scripts 00 to 08 regenerate every number in the paper, which was submitted on 2 November and presented on 9 November.",
+          "fr": "Les scripts 00 à 08 régénèrent chaque chiffre du papier, remis le 2 novembre et présenté le 9 novembre."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "brawl-rewards-bot",
+    "title": "Brawl rewards bot",
+    "question": {
+      "en": "Can I get free Brawl Stars rewards the minute they drop, for free?",
+      "fr": "Puis-je recevoir les récompenses gratuites de Brawl Stars dès leur sortie, gratuitement ?"
+    },
+    "summary": {
+      "en": "A Telegram bot running on a free Cloudflare Worker that posts new free Brawl Stars rewards as soon as they are released.",
+      "fr": "Un bot Telegram sur un Cloudflare Worker gratuit qui publie les nouvelles récompenses gratuites de Brawl Stars dès leur sortie."
+    },
+    "highlights": [],
+    "stack": ["JavaScript", "Cloudflare Workers", "Telegram Bot API"],
+    "skills": ["Web & apps"],
+    "category": "tools",
+    "featured": false,
+    "order": 13,
+    "pushedAt": "2026-11-01",
+    "readmeSha": "f2bfdb65a79bd6440af64243d4287e128d3ce7fc",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Free rewards expire fast, and I didn’t want a computer running all day just to catch them. A free Cloudflare Worker does the job.",
+      "fr": "Les récompenses gratuites expirent vite, et je ne voulais pas d’un ordinateur allumé toute la journée pour les attraper. Un Cloudflare Worker gratuit s’en charge."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Hourly cron",
+          "fr": "Cron horaire"
+        },
+        "detail": {
+          "en": "A Cloudflare cron wakes the Worker every hour at :30 and reads two reward sites.",
+          "fr": "Un cron Cloudflare réveille le Worker toutes les heures à :30 et lit deux sites de récompenses."
+        }
+      },
+      {
+        "title": {
+          "en": "Never twice",
+          "fr": "Jamais deux fois"
+        },
+        "detail": {
+          "en": "A reward is recognised by the Supercell id in its link, so one listed on both sites is sent once.",
+          "fr": "Une récompense est reconnue par l’identifiant Supercell dans son lien : celle listée sur les deux sites n’est envoyée qu’une fois."
+        }
+      },
+      {
+        "title": {
+          "en": "Daytime and night rules",
+          "fr": "Règles jour et nuit"
+        },
+        "detail": {
+          "en": "From 08:30 to 22:30 Paris time everything is sent at once; at night only rewards that expire before morning.",
+          "fr": "De 08:30 à 22:30 heure de Paris tout est envoyé aussitôt ; la nuit, seulement les récompenses qui expirent avant le matin."
+        }
+      },
+      {
+        "title": {
+          "en": "Telegram",
+          "fr": "Telegram"
+        },
+        "detail": {
+          "en": "Claim and Claimed buttons, expired rewards clean themselves up, and an alert fires if a site is unreadable for 24 hours.",
+          "fr": "Boutons Claim et Claimed, les récompenses expirées disparaissent seules, et une alerte part si un site est illisible pendant 24 h."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Trading_bot",
+    "title": "ETF rotation bot",
+    "question": {
+      "en": "Does a simple weekly ETF rotation hold up on a paper account?",
+      "fr": "Une rotation hebdomadaire d'ETF tient-elle la route sur un compte fictif ?"
+    },
+    "summary": {
+      "en": "A weekly rules-based ETF rotation on an Alpaca paper account, packaged with Docker and monitored from a Streamlit dashboard.",
+      "fr": "Une rotation d'ETF hebdomadaire fondée sur des règles, sur un compte fictif Alpaca, packagée avec Docker et suivie depuis un dashboard Streamlit."
+    },
+    "highlights": [],
+    "stack": ["Python", "Alpaca API", "Docker", "Streamlit"],
+    "skills": ["Finance", "Time series & econometrics"],
+    "category": "finance",
+    "featured": false,
+    "order": 14,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "9bcd7bae8599093e768295ef6d5f331fa2b6e8e7",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "No machine learning makes the decisions. The rules are simple on purpose so I can explain every trade; an LLM only writes a short summary after each rebalance.",
+      "fr": "Aucun apprentissage automatique ne décide. Les règles sont simples exprès, pour pouvoir expliquer chaque transaction ; un LLM se contente de rédiger un court résumé après chaque rééquilibrage."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Market regime",
+          "fr": "Régime de marché"
+        },
+        "detail": {
+          "en": "Every Friday at 15:45 New York time: bearish if SPY is below its 200- and 50-day averages and more than 5% under its 60-day high.",
+          "fr": "Chaque vendredi à 15 h 45, heure de New York : marché baissier si le SPY est sous ses moyennes à 200 et 50 jours et à plus de 5 % sous son plus haut à 60 jours."
+        }
+      },
+      {
+        "title": {
+          "en": "Defensive or offensive",
+          "fr": "Défensif ou offensif"
+        },
+        "detail": {
+          "en": "Bearish: gold, commodities and Treasuries. Bullish: the 7 best of 24 assets by trend quality and return over volatility.",
+          "fr": "Baissier : or, matières premières et obligations d’État. Haussier : les 7 meilleurs actifs sur 24 selon la qualité de tendance et le rendement rapporté à la volatilité."
+        }
+      },
+      {
+        "title": {
+          "en": "Volatility scaling",
+          "fr": "Ajustement à la volatilité"
+        },
+        "detail": {
+          "en": "Offensive exposure goes from 97% in calm markets to 30% in turbulent ones, and is cut again if the account falls 10% below its peak.",
+          "fr": "L’exposition offensive passe de 97 % en marché calme à 30 % en marché agité, et est réduite de nouveau si le compte tombe 10 % sous son plus haut."
+        }
+      },
+      {
+        "title": {
+          "en": "Hard limits",
+          "fr": "Limites strictes"
+        },
+        "detail": {
+          "en": "12% per asset, 28% per sector, 2% cash always kept, no leverage; orders in dollar amounts, skipping any position within 4% of target.",
+          "fr": "12 % par actif, 28 % par secteur, 2 % de cash conservé, pas de levier ; ordres en montants en dollars, en ignorant toute position à moins de 4 % de sa cible."
+        }
+      },
+      {
+        "title": {
+          "en": "An honest backtest",
+          "fr": "Un backtest honnête"
+        },
+        "detail": {
+          "en": "Weekly since 2016 with fees and a stress case, and the README lists its flaws: look-ahead in the asset list, approximated Bitcoin ETFs, a simplified copy of the live rules.",
+          "fr": "Hebdomadaire depuis 2016 avec frais et un cas de stress, et le README en liste les défauts : biais d’anticipation dans la liste d’actifs, ETF Bitcoin approximés, copie simplifiée des règles réelles."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Analysis_bot",
+    "title": "Analysis bot",
+    "question": {
+      "en": "Can I get a chart and the key numbers for any ticker without leaving Discord?",
+      "fr": "Puis-je obtenir un graphique et les chiffres clés de n'importe quel titre sans quitter Discord ?"
+    },
+    "summary": {
+      "en": "A Discord bot that returns a chart and key figures for any ticker, with a daily scanner that flags anomalies.",
+      "fr": "Un bot Discord qui renvoie un graphique et les chiffres clés de n'importe quel titre, avec un scanner quotidien qui signale les anomalies."
+    },
+    "highlights": [],
+    "stack": ["Python", "discord.py", "Docker"],
+    "skills": ["Finance", "Time series & econometrics"],
+    "category": "finance",
+    "featured": false,
+    "order": 15,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "30b9c1885252515c36888bfed94f51a82e9c58e7",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "A quick, data-first read on any stock, ETF or crypto without leaving Discord. And it must never make up numbers.",
+      "fr": "Un avis rapide, fondé sur les données, sur n’importe quelle action, ETF ou crypto sans quitter Discord. Et il ne doit jamais inventer de chiffres."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Ticker sheet",
+          "fr": "Fiche d’un titre"
+        },
+        "detail": {
+          "en": "Type AAPL, BTC or SPY (typos are corrected) and get a candlestick chart with 50/200-day averages and RSI, plus valuation, trend, Bollinger squeeze, max drawdown, insider trades, put/call ratio and volume.",
+          "fr": "Tapez AAPL, BTC ou SPY (les fautes sont corrigées) et recevez un graphique en chandeliers avec moyennes à 50/200 jours et RSI, plus valorisation, tendance, squeeze de Bollinger, drawdown maximal, opérations d’initiés, ratio put/call et volume."
+        }
+      },
+      {
+        "title": {
+          "en": "Daily scanner",
+          "fr": "Scanner quotidien"
+        },
+        "detail": {
+          "en": "Every 24 hours it checks the watchlist and alerts the channel on extreme readings, such as RSI under 30 or a volume z-score above 2.5.",
+          "fr": "Toutes les 24 heures, il vérifie la liste de suivi et alerte le canal sur les valeurs extrêmes, comme un RSI sous 30 ou un z-score de volume au-dessus de 2,5."
+        }
+      },
+      {
+        "title": {
+          "en": "Follow-up questions",
+          "fr": "Questions de suivi"
+        },
+        "detail": {
+          "en": "Gemini 2.5 Flash remembers the last five scans. Ask about something it has not scanned and it asks for a scan instead of guessing.",
+          "fr": "Gemini 2.5 Flash garde en mémoire les cinq derniers scans. Posez une question sur un titre non scanné et il demande un scan au lieu de deviner."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "NYC-Real-estate",
+    "title": "NYC real estate and crime",
+    "question": {
+      "en": "Does local crime explain New York housing prices?",
+      "fr": "La criminalité locale explique-t-elle les prix de l'immobilier à New York ?"
+    },
+    "summary": {
+      "en": "NYC property sales joined with NYPD complaint data to measure how much neighbourhood crime moves sale prices.",
+      "fr": "Les ventes immobilières de New York croisées avec les plaintes du NYPD pour mesurer l'effet de la criminalité du quartier sur les prix."
+    },
+    "highlights": [
+      {
+        "en": "Crime alone does not explain prices in this data. The best decision tree puts about 60% of test sales in the right price bracket, which is weak.",
+        "fr": "La criminalité seule n’explique pas les prix dans ces données. Le meilleur arbre de décision classe environ 60 % des ventes de test dans la bonne tranche de prix, ce qui est faible."
+      }
+    ],
+    "stack": ["Python", "pandas", "Jupyter"],
+    "skills": ["Time series & econometrics", "Data engineering"],
+    "category": "data",
+    "featured": false,
+    "order": 16,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "297e16ea411ca9ec773b69c9505411beec82e7d9",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "A student question: does local crime explain housing sale prices in New York? The honest answer turned out to be “not by itself”.",
+      "fr": "Une question d’étudiants : la criminalité locale explique-t-elle les prix de vente des logements à New York ? La réponse honnête s’est révélée être « pas à elle seule »."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Two big datasets",
+          "fr": "Deux gros jeux de données"
+        },
+        "detail": {
+          "en": "About 2 million NYC property sales (2003–2023, residential 2006–2019 kept) and 7 million geolocated NYPD complaints mapped to ZIP codes.",
+          "fr": "Environ 2 millions de ventes immobilières à New York (2003-2023, résidentiel 2006-2019 conservé) et 7 millions de plaintes géolocalisées du NYPD rattachées aux codes postaux."
+        }
+      },
+      {
+        "title": {
+          "en": "Make crime the difference",
+          "fr": "Faire de la criminalité la différence"
+        },
+        "detail": {
+          "en": "ZIP codes with similar mean prices were picked (an ANOVA checked it), so that crime would be the main thing that varies.",
+          "fr": "Des codes postaux aux prix moyens proches ont été choisis (vérifié par une ANOVA), pour que la criminalité soit la principale différence."
+        }
+      },
+      {
+        "title": {
+          "en": "Join and model",
+          "fr": "Joindre et modéliser"
+        },
+        "detail": {
+          "en": "Sales and yearly crime counts joined on ZIP code and year, then a linear regression and a depth-3 decision tree on every combination of features.",
+          "fr": "Ventes et comptes annuels de crimes joints par code postal et année, puis une régression linéaire et un arbre de décision de profondeur 3 sur toutes les combinaisons de variables."
+        }
+      },
+      {
+        "title": {
+          "en": "Why it is weak",
+          "fr": "Pourquoi c’est faible"
+        },
+        "detail": {
+          "en": "Sparse complaint records before 2006, the 2008 crisis, a sales file that does not separate houses from flats, and only about 1,100 sales left after filtering.",
+          "fr": "Plaintes clairsemées avant 2006, crise de 2008, fichier de ventes qui ne sépare pas maisons et appartements, et seulement environ 1 100 ventes après filtrage."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Windfarm_suitability_comparative_analysis",
+    "title": "Wind farm sites",
+    "question": {
+      "en": "Which of four French sites gets the most out of a wind turbine?",
+      "fr": "Lequel de quatre sites français tire le plus d'une éolienne ?"
+    },
+    "summary": {
+      "en": "Compares wind resource and turbine output at four French sites using geospatial and weather data.",
+      "fr": "Compare la ressource en vent et la production d'une éolienne sur quatre sites français à partir de données géographiques et météo."
+    },
+    "highlights": [
+      {
+        "en": "Ouessant comes first by a wide margin (score 0.53, mean wind 9.1 m/s), then La Rochelle (0.26). Paris ranks last because of urban turbulence, space and grid constraints.",
+        "fr": "Ouessant arrive premier avec une large avance (score 0,53, vent moyen 9,1 m/s), puis La Rochelle (0,26). Paris finit dernière à cause de la turbulence urbaine, de l’espace et des contraintes de réseau."
+      }
+    ],
+    "stack": ["Python", "pandas", "Jupyter"],
+    "skills": ["Data engineering", "Time series & econometrics"],
+    "category": "data",
+    "featured": false,
+    "order": 17,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "2948a49025869ed3ca2b0c59cce67d588b6a7b03",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "First-year group project (May 2025): where in France would a wind turbine produce the most? We compared four sites with a year of half-hourly weather data.",
+      "fr": "Projet de groupe de première année (mai 2025) : où en France une éolienne produirait-elle le plus ? Nous avons comparé quatre sites avec une année de données météo à la demi-heure."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Four sites, one year",
+          "fr": "Quatre sites, une année"
+        },
+        "detail": {
+          "en": "Ouessant, La Rochelle, Nîmes and Paris, with 2014 half-hourly weather; wind at 10 m and 100 m compared by month and hour.",
+          "fr": "Ouessant, La Rochelle, Nîmes et Paris, avec la météo 2014 à la demi-heure ; vent à 10 m et 100 m comparé par mois et par heure."
+        }
+      },
+      {
+        "title": {
+          "en": "Weibull and wind roses",
+          "fr": "Weibull et roses des vents"
+        },
+        "detail": {
+          "en": "A Weibull fit per site and wind roses for the dominant direction, for example south-west 20.7% of the time at Ouessant.",
+          "fr": "Un ajustement de Weibull par site et des roses des vents pour la direction dominante, par exemple sud-ouest 20,7 % du temps à Ouessant."
+        }
+      },
+      {
+        "title": {
+          "en": "Real turbines",
+          "fr": "De vraies éoliennes"
+        },
+        "detail": {
+          "en": "Wind extrapolated to hub height with the logarithmic profile for three real turbines, then operating hours, yearly energy and capacity factor from each power curve.",
+          "fr": "Vent extrapolé à la hauteur du moyeu avec le profil logarithmique pour trois vraies éoliennes, puis heures de fonctionnement, énergie annuelle et facteur de charge à partir de chaque courbe de puissance."
+        }
+      },
+      {
+        "title": {
+          "en": "One suitability score",
+          "fr": "Un score d’adéquation"
+        },
+        "detail": {
+          "en": "Resource, production and site constraints combined in a pipeline that can be rerun for any year.",
+          "fr": "Ressource, production et contraintes du site combinées dans un pipeline relançable pour n’importe quelle année."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "Monopoly",
+    "title": "Monopoly odds",
+    "question": {
+      "en": "Which Monopoly properties actually pay off?",
+      "fr": "Quelles propriétés du Monopoly rapportent vraiment ?"
+    },
+    "summary": {
+      "en": "Monte Carlo and Markov chain simulations of the board to find the most profitable properties.",
+      "fr": "Simulations de Monte-Carlo et chaîne de Markov du plateau pour trouver les propriétés les plus rentables."
+    },
+    "highlights": [
+      {
+        "en": "Jail is the most visited square: 6.3% of turns, 2.5 times an average square.",
+        "fr": "La prison est la case la plus visitée : 6,3 % des tours, 2,5 fois une case moyenne."
+      },
+      {
+        "en": "The orange group is the best investment, and the third house is where returns jump.",
+        "fr": "Le groupe orange est le meilleur investissement, et la troisième maison est celle où les rendements bondissent."
+      }
+    ],
+    "stack": ["Python", "NumPy"],
+    "skills": ["Optimisation & simulation"],
+    "category": "coursework",
+    "featured": false,
+    "order": 18,
+    "pushedAt": "2026-10-23",
+    "readmeSha": "a680bcb1e8f36f9cea40c08b3e2e08eadcff3b9e",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "Rents and prices are fixed by the rules, but how often a player lands on each square is not. We generated that data by simulation and checked it against an exact Markov-chain solution. Group project for the Data Storage course at CentraleSupélec with Augustin Vlandas, Eliott Beghin and Saty Viard Laroque.",
+      "fr": "Loyers et prix sont fixés par les règles, mais pas la fréquence à laquelle on tombe sur chaque case. Nous avons généré ces données par simulation et vérifié avec une solution exacte par chaîne de Markov. Projet du cours de stockage de données à CentraleSupélec avec Augustin Vlandas, Eliott Beghin et Saty Viard Laroque."
+    },
+    "architecture": [
+      {
+        "title": {
+          "en": "Simulate",
+          "fr": "Simuler"
+        },
+        "detail": {
+          "en": "Monte Carlo of turns with the official rules (doubles, speeding to jail, both card decks, two jail strategies), seeded for reproducibility.",
+          "fr": "Monte-Carlo de tours avec les règles officielles (doubles, prison, les deux paquets de cartes, deux stratégies de prison), avec graine pour la reproductibilité."
+        }
+      },
+      {
+        "title": {
+          "en": "Prove it",
+          "fr": "Le prouver"
+        },
+        "detail": {
+          "en": "Exact long-run probabilities from the 40-square Markov transition matrix, used to validate the simulation.",
+          "fr": "Probabilités exactes à long terme à partir de la matrice de transition de Markov à 40 cases, utilisées pour valider la simulation."
+        }
+      },
+      {
+        "title": {
+          "en": "Clean the deeds",
+          "fr": "Nettoyer les titres"
+        },
+        "detail": {
+          "en": "OCR errors in the title deeds fixed (“3O €” becomes “30 €”), with checks that rents increase with houses.",
+          "fr": "Erreurs d’OCR des titres de propriété corrigées (« 3O € » devient « 30 € »), avec des contrôles que les loyers augmentent avec les maisons."
+        }
+      },
+      {
+        "title": {
+          "en": "Store and benchmark",
+          "fr": "Stocker et mesurer"
+        },
+        "detail": {
+          "en": "The event log goes to CSV, SQLite and Parquet, with a benchmark of size and query times.",
+          "fr": "Le journal d’événements va dans CSV, SQLite et Parquet, avec un benchmark de taille et de temps de requête."
+        }
+      },
+      {
+        "title": {
+          "en": "Expected rent and payback",
+          "fr": "Loyer attendu et retour"
+        },
+        "detail": {
+          "en": "Expected rent, payback time and ROI per property and colour group, then the charts.",
+          "fr": "Loyer attendu, délai de retour et ROI par propriété et par groupe de couleur, puis les graphiques."
+        }
+      }
+    ]
+  },
+  {
+    "repo": "econometrics",
+    "title": "Econometrics notebooks",
+    "question": {
+      "en": "How much of the wage gap survives once you control for everything you can measure?",
+      "fr": "Que reste-t-il de l'écart de salaire une fois contrôlé tout ce qu'on peut mesurer ?"
+    },
+    "summary": {
+      "en": "Notebooks from the Introduction to Econometrics course: Vienna hotel prices, a test of online against offline prices, a Monte Carlo of the OLS estimator, and how much of the gender wage gap remains after controlling for education and age.",
+      "fr": "Notebooks du cours d'introduction à l'économétrie : prix des hôtels à Vienne, test des prix en ligne contre hors ligne, Monte-Carlo de l'estimateur des MCO, et part de l'écart salarial hommes-femmes qui subsiste une fois l'éducation et l'âge contrôlés."
+    },
+    "highlights": [],
+    "stack": ["Python", "pandas", "statsmodels", "Jupyter"],
+    "skills": ["Time series & econometrics"],
+    "category": "coursework",
+    "featured": false,
+    "order": 19,
+    "pushedAt": "2026-10-23",
+    "source": "manual",
+    "locked": false,
+    "why": {
+      "en": "My notebooks for the Introduction to Econometrics course (Prof. Roberto Renò, 2026). They follow case studies from Békés and Kézdi’s Data Analysis for Business, Economics, and Policy, with my own extensions.",
+      "fr": "Mes notebooks du cours d’introduction à l’économétrie (Prof. Roberto Renò, 2026). Ils suivent des études de cas de Békés et Kézdi, Data Analysis for Business, Economics, and Policy, avec mes propres extensions."
+    }
+  }
+]

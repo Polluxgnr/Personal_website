@@ -1,0 +1,231 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import ProjectList from './ProjectList.astro';
+import Logo from './Logo.astro';
+import Stats from './Stats.astro';
+import ToolName from './ToolName.astro';
+import { featuredProjects, projects, profile } from '../lib/data.ts';
+import { formatRange } from '../lib/dates.ts';
+import { byStartDesc } from '../lib/timeline.ts';
+import { localizePath, pick, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const fr = lang === 'fr';
+const tools = profile.skills.flatMap((g) => g.items);
+const recent = profile.experience.toSorted(byStartDesc).slice(0, 4);
+---
+
+<Base lang={lang} path="/">
+  <Hero lang={lang} />
+
+  {/* The tools I use, drifting past. The second copy only exists to make the loop seamless. */}
+  <div class="marquee" aria-label={t('about.skills')} role="group">
+    <ul class="track">
+      {tools.map((tool) => (
+        <li>
+          <ToolName name={tool} />
+        </li>
+      ))}
+    </ul>
+    <ul class="track" aria-hidden="true">
+      {tools.map((tool) => (
+        <li>
+          <ToolName name={tool} />
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <section class="section wrap" aria-labelledby="home-projects">
+    <div class="section-head">
+      <h2 id="home-projects" data-words>
+        {t('home.projects')}
+      </h2>
+      <a class="text-link" href={localizePath('/projects/', lang)}>
+        {t('home.allProjects', { n: projects.length })}
+      </a>
+    </div>
+    <ProjectList lang={lang} projects={featuredProjects} />
+  </section>
+
+  <Stats lang={lang} />
+
+  <section class="section wrap schools" aria-labelledby="home-schools">
+    <h2 id="home-schools" data-words>
+      {fr ? 'Mes écoles' : 'Where I study'}
+    </h2>
+    <div class="school-groups" data-reveal-group>
+      <figure data-reveal>
+        <div class="marks">
+          <Logo name="centralesupelec" label="CentraleSupélec" />
+          <Logo name="paris-saclay" label="Université Paris-Saclay" />
+          <Logo name="essec" label="ESSEC Business School" />
+        </div>
+        <figcaption>
+          {fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028'}
+        </figcaption>
+      </figure>
+      <figure data-reveal>
+        <div class="marks">
+          <Logo name="uc3m" label="Universidad Carlos III de Madrid" />
+        </div>
+        <figcaption>
+          {fr ? 'Semestre d’échange, janvier à mai 2027' : 'Exchange semester, January to May 2027'}
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="home-experience">
+    <div class="section-head">
+      <h2 id="home-experience" data-words>
+        {t('home.experience')}
+      </h2>
+      <a class="text-link" href={localizePath('/about/', lang)}>
+        {t('home.background')}
+      </a>
+    </div>
+    <ol class="recent" role="list" data-reveal-group>
+      {recent.map((e) => (
+        <li data-reveal>
+          <p class="when">{formatRange(e.start, e.end, lang)}</p>
+          <h3>{e.org}</h3>
+          <p>{pick(e.role, lang)}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="section wrap cta" aria-labelledby="home-contact">
+    <h2 id="home-contact" data-words>
+      {fr ? 'Parlons business' : 'Let’s talk business'}
+    </h2>
+    <div class="cta-row" data-reveal-group>
+      <p data-reveal>{pick(profile.lookingFor, lang)}</p>
+      <a class="button" href={localizePath('/contact/', lang)} data-magnetic data-reveal>
+        {t('hero.contact')}
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-block: 1.1rem;
+    background: var(--surface);
+    transition: background-color 400ms var(--ease);
+  }
+  .track {
+    display: flex;
+    flex: none;
+    gap: 3rem;
+    padding: 0 1.5rem;
+    list-style: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-lead);
+    text-transform: uppercase;
+    white-space: nowrap;
+    animation: slide 48s linear infinite;
+  }
+  .marquee:hover .track {
+    animation-play-state: paused;
+  }
+  @keyframes slide {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none;
+    }
+  }
+
+  .school-groups {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 64rem) {
+    .school-groups {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+  .school-groups figure {
+    display: grid;
+    gap: 1.25rem;
+    align-content: space-between;
+    margin: 0;
+    padding: clamp(1.5rem, 2.6vw, 2.25rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+  }
+  .marks {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem clamp(1.5rem, 3vw, 2.75rem);
+  }
+  figcaption {
+    color: var(--muted);
+    font-size: var(--step-small);
+  }
+  .recent {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  @media (min-width: 48rem) {
+    .recent {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 80rem) {
+    .recent {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .recent li {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: clamp(1.25rem, 2vw, 1.75rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+  }
+  .when {
+    color: var(--muted);
+    font-size: var(--step-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cta h2 {
+    font-size: var(--step-display);
+    line-height: 0.98;
+    max-width: 14ch;
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+  }
+  .cta-row p {
+    max-width: 44ch;
+    font-size: var(--step-lead);
+    line-height: 1.4;
+  }
+</style>

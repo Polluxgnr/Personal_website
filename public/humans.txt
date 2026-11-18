@@ -10,5 +10,5 @@ Eliott, Saty, Augustin and Neel, for the group projects behind several of these 
 /* SITE */
 Built with: Astro, TypeScript, Motion, plain CSS
 Hosted on: GitHub Pages
-Trackers: none
+Analytics: GoatCounter, only when enabled (no cookies, no stored IP addresses; see /privacy/)
 Cookies: none (one tint preference lives in your browser)

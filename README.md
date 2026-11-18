@@ -53,6 +53,15 @@ npm run dev                        # http://localhost:4321
 
 Do not run `lhci` (or anything that starts the installed Google Chrome with a fresh profile) on this Windows machine. Each fresh Chrome profile checks whether the Windows password is blank by attempting a sign-in with an empty password, and that counts as a failed sign-in: twelve Lighthouse runs in a row lock the Windows account for 10 minutes. Lighthouse therefore only runs in GitHub Actions ([`.github/lighthouserc.json`](.github/lighthouserc.json)). Playwright's bundled Chromium, used by `npm run build` and `npm run test:e2e`, was checked and does not trigger it.
 
+## Visit stats
+
+The site can count visits with [GoatCounter](https://www.goatcounter.com): free, no cookies, no stored IP addresses. It shows where visitors came from, their browser and operating system (so phone or computer), country, and the hour. It is off until a site code is set:
+
+1. Create a free account at goatcounter.com and pick a site code, for example `pollux` (your dashboard is then `pollux.goatcounter.com`).
+2. Put the code in [`src/analytics.config.json`](src/analytics.config.json) (or set the `PUBLIC_GOATCOUNTER` variable) and deploy. The privacy page, the footer line and the Content-Security-Policy follow by themselves.
+
+Nothing is counted from localhost, from browsers sending "Do Not Track", or from obvious bots. To know _who_ sent a visit, tag the links you share: a visit to `https://polluxgronier.me/?src=linkedin` shows up with the source `linkedin`. Suggested tags: `?src=linkedin` (LinkedIn website field), `?src=github` (GitHub profile), `?src=mail` (email signature), `?src=family`. The CV's own link is already tagged `?src=cv`.
+
 ## Editing content
 
 - Experience, education, skills and the intro: [`src/data/profile.json`](src/data/profile.json). Every text has an `en` and a `fr` version.

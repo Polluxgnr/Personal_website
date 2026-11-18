@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import { statsCode } from '../config.ts';
+import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const fr = lang === 'fr';
+const counting = Boolean(statsCode);
+
+const sections = [
+  {
+    title: fr ? 'Compteur de visites' : 'Visit counter',
+    text: !counting
+      ? fr
+        ? 'Ce site ne compte pas les visites.'
+        : 'This site does not count visits.'
+      : fr
+        ? 'Ce site compte les visites avec GoatCounter, un service respectueux de la vie privée. Pour chaque page vue, il enregistre : la page, son titre, le site ou le lien d’où vous venez, votre navigateur et votre système (ce qui indique un téléphone, une tablette ou un ordinateur), votre pays et l’heure. Il ne stocke aucune adresse IP, ne dépose aucun cookie et ne peut pas vous suivre d’un site à l’autre. Je m’en sers pour savoir comment on arrive sur le site, par exemple depuis LinkedIn ou depuis un proche. Si votre navigateur envoie « Do Not Track », rien n’est compté.'
+        : 'This site counts visits with GoatCounter, a privacy-friendly service. For each page view it records the page, its title, the site or link you came from, your browser and operating system (which shows whether you used a phone, a tablet or a computer), your country, and the time. It stores no IP address, sets no cookie, and cannot follow you from one site to another. I use it to see how people find the site, for example whether a visit came from LinkedIn or from a friend. If your browser sends “Do Not Track”, nothing is counted.',
+  },
+  {
+    title: fr ? 'Formulaire de contact' : 'Contact form',
+    text: fr
+      ? 'Les messages passent par Web3Forms, qui me les envoie par e-mail. Je n’utilise ce que vous écrivez que pour vous répondre, et je peux le supprimer sur simple demande.'
+      : 'Messages go through Web3Forms, which emails them to me. I use what you write only to reply, and I will delete it if you ask.',
+  },
+  {
+    title: fr ? 'Sur votre appareil' : 'On your device',
+    text: fr
+      ? 'Le choix de couleur (nuit, papier ou abysse) est gardé dans votre navigateur, sur votre appareil uniquement. Il ne le quitte jamais.'
+      : 'Your colour choice (night, paper or abyss) is kept in your browser, on your device only. It never leaves it.',
+  },
+  {
+    title: fr ? 'Tiers' : 'Third parties',
+    text: fr
+      ? 'Pas de publicité, pas de widgets de réseaux sociaux, pas de polices ni de scripts externes : tout est hébergé sur ce site.'
+      : 'No ads, no social-media widgets, no external fonts or scripts: everything is hosted on this site.',
+  },
+];
+---
+
+<Base
+  lang={lang}
+  path="/privacy/"
+  title={t('footer.privacy')}
+  description={
+    fr
+      ? 'Ce que ce site enregistre sur ses visiteurs : pas de cookies, pas de publicité, un compteur de visites respectueux de la vie privée.'
+      : 'What this site records about its visitors: no cookies, no ads, and a privacy-friendly visit counter.'
+  }
+>
+  <article class="wrap page">
+    <h1 data-words>{t('footer.privacy')}</h1>
+    <p class="short">
+      {fr
+        ? 'En bref : aucun cookie, aucune publicité, aucun profil de vous.'
+        : 'The short version: no cookies, no ads, no profile of you.'}
+    </p>
+    <div class="blocks" data-reveal-group>
+      {sections.map((s) => (
+        <section data-reveal>
+          <h2>{s.title}</h2>
+          <p>{s.text}</p>
+        </section>
+      ))}
+    </div>
+    <p class="ask">
+      <a class="text-link" href={localizePath('/contact/', lang)}>
+        {fr ? 'Une question ou une demande de suppression ?' : 'A question, or a deletion request?'}
+      </a>
+    </p>
+  </article>
+</Base>
+
+<style>
+  h1 {
+    font-size: var(--step-display);
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .short {
+    max-width: 40ch;
+    font-size: var(--step-lead);
+    line-height: 1.4;
+  }
+  .blocks {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  @media (min-width: 64rem) {
+    .blocks {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  section {
+    padding: clamp(1.25rem, 2.4vw, 2rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+  }
+  h2 {
+    margin-bottom: 0.75rem;
+    font-size: var(--step-lead);
+    text-transform: none;
+  }
+  section p {
+    max-width: 62ch;
+  }
+  .ask {
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+</style>

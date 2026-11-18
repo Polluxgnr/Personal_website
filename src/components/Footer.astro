@@ -1,6 +1,7 @@
 ---
+import { statsCode } from '../config.ts';
 import { profile } from '../lib/data.ts';
-import { useTranslations, type Lang } from '../i18n/ui.ts';
+import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
 
 interface Props {
   lang: Lang;
@@ -15,9 +16,13 @@ const fr = lang === 'fr';
 <footer class="site-footer">
   <p>
     © {year} {profile.name}.{' '}
-    {fr
-      ? 'Écrit à la main, très testé, zéro traceur.'
-      : 'Hand-written, heavily tested, zero trackers.'}
+    {statsCode
+      ? fr
+        ? 'Écrit à la main, très testé. Un compteur de visites sans cookie, sans pub.'
+        : 'Hand-written, heavily tested. One cookie-free visit counter, no ads.'
+      : fr
+        ? 'Écrit à la main, très testé, zéro traceur.'
+        : 'Hand-written, heavily tested, zero trackers.'}
   </p>
   <p class="hint">
     {fr
@@ -37,6 +42,9 @@ const fr = lang === 'fr';
     </li>
     <li>
       <a href={`${profile.links.github}/Personal_website`}>{t('footer.source')}</a>
+    </li>
+    <li>
+      <a href={localizePath('/privacy/', lang)}>{t('footer.privacy')}</a>
     </li>
   </ul>
 </footer>

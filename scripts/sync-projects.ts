@@ -16,6 +16,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import { Category, Localized, Projects, type Project } from '../src/lib/schema.ts';
+import { extractJson, rankFreeModels, type OpenRouterModel } from '../src/lib/llm.ts';
 import {
   applyAction,
   planSync,
@@ -99,14 +100,90 @@ Rules:
 - The French is natural French written for a French reader, not a word-for-word translation. Use French typographic spacing before ? ! : ;.
 - Match the tone and length of the example cards.`;
 
+type Provider = { kind: 'anthropic'; client: Anthropic } | { kind: 'openrouter'; apiKey: string };
+
+/**
+ * Anthropic when ANTHROPIC_API_KEY is set; otherwise free models on OpenRouter
+ * (OPENROUTER_API_KEY). LLM_PROVIDER=anthropic|openrouter forces one.
+ */
+function resolveProvider(): Provider {
+  const choice =
+    process.env.LLM_PROVIDER ?? (process.env.ANTHROPIC_API_KEY ? 'anthropic' : 'openrouter');
+  if (choice === 'anthropic') return { kind: 'anthropic', client: new Anthropic() };
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) throw new Error('Set OPENROUTER_API_KEY (free models) or ANTHROPIC_API_KEY.');
+  return { kind: 'openrouter', apiKey };
+}
+
+/** Free models, tried in order; each answer is validated and one retry names the problem. */
+async function generateWithOpenRouter<T>(
+  apiKey: string,
+  system: string,
+  user: string,
+  schema: z.ZodType<T>,
+): Promise<{ value: T; model: string }> {
+  const listing = (await (await fetch('https://openrouter.ai/api/v1/models')).json()) as {
+    data: OpenRouterModel[];
+  };
+  const models = rankFreeModels(listing.data);
+  if (!models.length) throw new Error('No free OpenRouter model is available right now.');
+  const instructions = `${system}\n\nAnswer with a single JSON object and nothing else. It must match this JSON Schema:\n${JSON.stringify(z.toJSONSchema(schema))}`;
+
+  const failures: string[] = [];
+  for (const model of models) {
+    let problem = '';
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://polluxgronier.me',
+          'X-Title': 'polluxgronier.me project sync',
+        },
+        body: JSON.stringify({
+          model: model.id,
+          temperature: 0.2,
+          max_tokens: 8000,
+          ...(model.supported_parameters?.includes('response_format')
+            ? { response_format: { type: 'json_object' } }
+            : {}),
+          messages: [
+            { role: 'system', content: instructions },
+            {
+              role: 'user',
+              content: problem
+                ? `${user}\n\nYour previous answer was rejected: ${problem}\nFix it and answer again with only the JSON object.`
+                : user,
+            },
+          ],
+        }),
+      });
+      if (!response.ok) {
+        failures.push(`${model.id}: HTTP ${response.status}`);
+        break; // rate limited or unavailable: try the next model
+      }
+      const data = (await response.json()) as { choices?: { message?: { content?: string } }[] };
+      try {
+        const value = schema.parse(extractJson(data.choices?.[0]?.message?.content ?? ''));
+        return { value, model: model.id };
+      } catch (error) {
+        problem = (error instanceof Error ? error.message : String(error)).slice(0, 600);
+        if (attempt === 1) failures.push(`${model.id}: invalid answer`);
+      }
+    }
+  }
+  throw new Error(`No free model produced a valid card (${failures.join('; ')}).`);
+}
+
 async function generate(
-  client: Anthropic,
+  provider: Provider,
   repo: RepoInfo,
   readmeText: string,
   examples: readonly Project[],
   skills: readonly string[],
   current?: Project,
-): Promise<GeneratedText> {
+): Promise<{ text: GeneratedText; model: string }> {
   const truncated = readmeText.length > README_LIMIT;
   if (truncated)
     console.warn(
@@ -125,36 +202,42 @@ async function generate(
       category,
     }),
   );
+  const examplesText = `Example cards, for tone and length:\n${JSON.stringify(exampleCards, null, 2)}`;
+  const taskText = [
+    `Repository: ${OWNER}/${repo.name}`,
+    repo.description ? `GitHub description: ${repo.description}` : '',
+    current
+      ? `Current card (update it to match the new README):\n${JSON.stringify(current, null, 2)}`
+      : '',
+    `README${truncated ? ' (truncated)' : ''}:\n<readme>\n${readmeText.slice(0, README_LIMIT)}\n</readme>`,
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+  const schema = generatedSchema(skills);
 
-  const response = await client.beta.messages.parse({
+  if (provider.kind === 'openrouter') {
+    const { value, model } = await generateWithOpenRouter(
+      provider.apiKey,
+      SYSTEM,
+      `${examplesText}\n\n${taskText}`,
+      schema,
+    );
+    return { text: value, model };
+  }
+
+  const response = await provider.client.beta.messages.parse({
     model: MODEL,
     max_tokens: 16000,
     betas: ['server-side-fallback-2026-07-01'],
     fallbacks: 'default',
-    output_config: { effort: 'medium', format: betaZodOutputFormat(generatedSchema(skills)) },
+    output_config: { effort: 'medium', format: betaZodOutputFormat(schema) },
     system: [{ type: 'text', text: SYSTEM }],
     messages: [
       {
         role: 'user',
         content: [
-          {
-            type: 'text',
-            text: `Example cards, for tone and length:\n${JSON.stringify(exampleCards, null, 2)}`,
-            cache_control: { type: 'ephemeral' },
-          },
-          {
-            type: 'text',
-            text: [
-              `Repository: ${OWNER}/${repo.name}`,
-              repo.description ? `GitHub description: ${repo.description}` : '',
-              current
-                ? `Current card (update it to match the new README):\n${JSON.stringify(current, null, 2)}`
-                : '',
-              `README${truncated ? ' (truncated)' : ''}:\n<readme>\n${readmeText.slice(0, README_LIMIT)}\n</readme>`,
-            ]
-              .filter(Boolean)
-              .join('\n\n'),
-          },
+          { type: 'text', text: examplesText, cache_control: { type: 'ephemeral' } },
+          { type: 'text', text: taskText },
         ],
       },
     ],
@@ -165,7 +248,7 @@ async function generate(
   if (response.stop_reason === 'max_tokens')
     throw new Error(`Output for ${repo.name} was cut off.`);
   if (!response.parsed_output) throw new Error(`No valid card for ${repo.name}.`);
-  return response.parsed_output;
+  return { text: response.parsed_output, model: MODEL };
 }
 
 async function main() {
@@ -183,7 +266,8 @@ async function main() {
   const skills = [...new Set(current.flatMap((p) => p.skills))].sort();
   const examples = current.filter((p) => p.featured).slice(0, 3);
   // Created lazily so a run with nothing to write needs no API key.
-  let client: Anthropic | undefined;
+  let provider: Provider | undefined;
+  const modelsUsed = new Set<string>();
 
   const summary: string[] = [];
   let nextOrder = Math.max(0, ...current.map((p) => p.order)) + 1;
@@ -202,15 +286,17 @@ async function main() {
     }
     let text: GeneratedText;
     try {
-      client ??= new Anthropic();
-      text = await generate(
-        client,
+      provider ??= resolveProvider();
+      const result = await generate(
+        provider,
         action.repo,
         r.text,
         examples,
         skills,
         action.kind === 'rewrite' ? action.current : undefined,
       );
+      text = result.text;
+      modelsUsed.add(result.model);
     } catch (error) {
       // One failing repository should not block the others; keep its current card.
       const reason =
@@ -232,7 +318,7 @@ async function main() {
   await writeFile(DATA, `${JSON.stringify(validated, null, 2)}\n`);
 
   const body = summary.length
-    ? `The weekly sync found changes in my GitHub repositories. Each card was written by an AI model from the repository README; check the wording before merging.\n\n${summary.join('\n')}`
+    ? `The weekly sync found changes in my GitHub repositories. Each card was written by an AI model (${[...modelsUsed].join(', ') || 'none'}) from the repository README; check the wording before merging, especially the French.\n\n${summary.join('\n')}`
     : 'No project text changed; only dates and links were refreshed.';
   if (process.env.SYNC_SUMMARY) await writeFile(process.env.SYNC_SUMMARY, `${body}\n`);
   console.log(body);

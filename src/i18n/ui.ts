@@ -81,6 +81,7 @@ const strings = {
     'project.aiNote':
       'This summary was written by an AI from the repository README and reviewed before publishing.',
     'footer.source': 'Source code of this site',
+    'footer.privacy': 'Privacy',
     'footer.built': 'Built with Astro, deployed by GitHub Actions.',
     'cv.download': 'Download PDF',
     'cv.contact': 'Contact through polluxgronier.me',
@@ -170,6 +171,7 @@ const strings = {
     'project.aiNote':
       'Ce résumé a été rédigé par une IA à partir du README du dépôt, puis relu avant publication.',
     'footer.source': 'Code source de ce site',
+    'footer.privacy': 'Confidentialité',
     'footer.built': 'Construit avec Astro, déployé par GitHub Actions.',
     'cv.download': 'Télécharger le PDF',
     'cv.contact': 'Contact via polluxgronier.me',

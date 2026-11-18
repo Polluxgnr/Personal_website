@@ -308,3 +308,25 @@ test('school logos are shown with accessible names, and the GitHub mark links ou
     page.locator('a[href="https://github.com/Polluxgnr"] [role="img"][aria-label="GitHub"]'),
   ).toHaveCount(1);
 });
+
+test('the privacy page exists in both languages and says what the site records', async ({
+  page,
+}) => {
+  await page.goto('/privacy/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacy');
+  await expect(page.locator('main')).toContainText('no cookies');
+  await page.goto('/fr/privacy/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Confidentialité');
+  await expect(page.locator('main')).toContainText('aucun cookie');
+});
+
+test('visit counting is off by default: no counter attribute, no counter request', async ({
+  page,
+}) => {
+  const requests: string[] = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('body')).not.toHaveAttribute('data-stats', /.+/);
+  expect(requests.filter((url) => url.includes('goatcounter'))).toEqual([]);
+});

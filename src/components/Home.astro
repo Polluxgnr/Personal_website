@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from './Hero.astro';
 import ProjectList from './ProjectList.astro';
-import Logo from './Logo.astro';
+import Schools from './Schools.astro';
 import Stats from './Stats.astro';
 import ToolName from './ToolName.astro';
 import { featuredProjects, projects, profile } from '../lib/data.ts';
@@ -58,28 +58,9 @@ const recent = profile.experience.toSorted(byStartDesc).slice(0, 4);
 
   <section class="section wrap schools" aria-labelledby="home-schools">
     <h2 id="home-schools" data-words>
-      {fr ? 'Mes écoles' : 'Where I study'}
+      {fr ? 'Où j’étudie' : 'Where I study'}
     </h2>
-    <div class="school-groups" data-reveal-group>
-      <figure data-reveal>
-        <div class="marks">
-          <Logo name="centralesupelec" label="CentraleSupélec" />
-          <Logo name="paris-saclay" label="Université Paris-Saclay" />
-          <Logo name="essec" label="ESSEC Business School" />
-        </div>
-        <figcaption>
-          {fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028'}
-        </figcaption>
-      </figure>
-      <figure data-reveal>
-        <div class="marks">
-          <Logo name="uc3m" label="Universidad Carlos III de Madrid" />
-        </div>
-        <figcaption>
-          {fr ? 'Semestre d’échange, janvier à mai 2027' : 'Exchange semester, January to May 2027'}
-        </figcaption>
-      </figure>
-    </div>
+    <Schools lang={lang} />
   </section>
 
   <section class="section wrap" aria-labelledby="home-experience">
@@ -94,9 +75,16 @@ const recent = profile.experience.toSorted(byStartDesc).slice(0, 4);
     <ol class="recent" role="list" data-reveal-group>
       {recent.map((e) => (
         <li data-reveal>
-          <p class="when">{formatRange(e.start, e.end, lang)}</p>
-          <h3>{e.org}</h3>
-          <p>{pick(e.role, lang)}</p>
+          <a
+            href={localizePath(
+              `/about/#${e.kind === 'work' ? 'experience' : 'associations'}`,
+              lang,
+            )}
+          >
+            <p class="when">{formatRange(e.start, e.end, lang)}</p>
+            <h3>{e.org}</h3>
+            <p>{pick(e.role, lang)}</p>
+          </a>
         </li>
       ))}
     </ol>
@@ -151,35 +139,6 @@ const recent = profile.experience.toSorted(byStartDesc).slice(0, 4);
     }
   }
 
-  .school-groups {
-    display: grid;
-    gap: 0.5rem;
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
-  }
-  @media (min-width: 64rem) {
-    .school-groups {
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    }
-  }
-  .school-groups figure {
-    display: grid;
-    gap: 1.25rem;
-    align-content: space-between;
-    margin: 0;
-    padding: clamp(1.5rem, 2.6vw, 2.25rem);
-    border-radius: 1.25rem;
-    background: var(--surface);
-  }
-  .marks {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.5rem clamp(1.5rem, 3vw, 2.75rem);
-  }
-  figcaption {
-    color: var(--muted);
-    font-size: var(--step-small);
-  }
   .recent {
     list-style: none;
     padding: 0;
@@ -196,13 +155,22 @@ const recent = profile.experience.toSorted(byStartDesc).slice(0, 4);
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
-  .recent li {
+  .recent a {
     display: grid;
     gap: 0.5rem;
     align-content: start;
+    height: 100%;
     padding: clamp(1.25rem, 2vw, 1.75rem);
     border-radius: 1.25rem;
     background: var(--surface);
+    text-decoration: none;
+    transition:
+      transform 260ms var(--ease-out),
+      background-color 260ms var(--ease);
+  }
+  .recent a:hover {
+    transform: translateY(-3px);
+    background: var(--surface-2);
   }
   .when {
     color: var(--muted);

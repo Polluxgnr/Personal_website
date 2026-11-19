@@ -1,0 +1,145 @@
+---
+/**
+ * Where I study: one tile per school, each linking to the school's own site.
+ * The exchange semester is the highlighted wide tile.
+ */
+import Logo from './Logo.astro';
+import type { Lang } from '../i18n/ui.ts';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const fr = lang === 'fr';
+
+const schools = [
+  {
+    logo: 'centralesupelec',
+    name: 'CentraleSupélec',
+    href: 'https://www.centralesupelec.fr/',
+    text: fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028',
+  },
+  {
+    logo: 'essec',
+    name: 'ESSEC Business School',
+    href: 'https://www.essec.edu/',
+    text: fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028',
+  },
+  {
+    logo: 'paris-saclay',
+    name: 'Université Paris-Saclay',
+    href: 'https://www.universite-paris-saclay.fr/',
+    text: fr
+      ? 'L’université dont fait partie CentraleSupélec'
+      : 'The university CentraleSupélec belongs to',
+  },
+] as const;
+
+const exchange = {
+  name: 'Universidad Carlos III de Madrid',
+  href: 'https://www.uc3m.es/',
+  text: fr
+    ? 'Semestre d’échange dans la faculté d’ingénierie à l’UC3M, à Madrid, de janvier à mai 2027'
+    : 'Exchange semester in UC3M’s School of Engineering, in Madrid, January to May 2027',
+};
+---
+
+<div class="schools" data-reveal-group>
+  {schools.map((s) => (
+    <a class="tile" href={s.href} rel="noopener" data-reveal>
+      <Logo name={s.logo} label={s.name} />
+      <span class="text">
+        <span class="name">{s.name}</span>
+        <span class="what">{s.text}</span>
+      </span>
+      <span class="arrow" aria-hidden="true">
+        ↗
+      </span>
+    </a>
+  ))}
+  <a class="tile exchange" href={exchange.href} rel="noopener" data-reveal>
+    <Logo name="uc3m" label={exchange.name} />
+    <span class="text">
+      <span class="name">{exchange.name}</span>
+      <span class="what">{exchange.text}</span>
+    </span>
+    <span class="arrow" aria-hidden="true">
+      ↗
+    </span>
+  </a>
+</div>
+
+<style>
+  .schools {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  @media (min-width: 48rem) {
+    .schools {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .exchange {
+      grid-column: 1 / -1;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+  .tile {
+    position: relative;
+    display: grid;
+    gap: 1.5rem;
+    align-content: space-between;
+    min-height: 11rem;
+    padding: clamp(1.25rem, 2.2vw, 1.75rem);
+    border-radius: 1.25rem;
+    background: var(--surface);
+    text-decoration: none;
+    transition:
+      transform 260ms var(--ease-out),
+      background-color 260ms var(--ease);
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    background: var(--surface-2);
+  }
+  .exchange {
+    min-height: 0;
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .exchange:hover {
+    background: var(--accent);
+  }
+  .text {
+    display: grid;
+    gap: 0.25rem;
+    padding-right: 2rem;
+  }
+  .name {
+    font-weight: 700;
+  }
+  .what {
+    font-size: var(--step-small);
+    color: var(--muted);
+  }
+  .exchange .what {
+    color: inherit;
+    opacity: 0.85;
+  }
+  .arrow {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 1.25rem;
+    transition: transform 260ms var(--ease-out);
+  }
+  .exchange .arrow {
+    position: static;
+  }
+  .tile:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+</style>

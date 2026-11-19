@@ -129,20 +129,15 @@ test('both CV PDFs are served', async ({ request }) => {
   }
 });
 
-test('the tint switcher changes the colours and remembers the choice', async ({
-  page,
-  isMobile,
-}) => {
-  test.skip(isMobile, 'Same control; checked once on desktop.');
+test('there is no visible colour picker, only the secret T key', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Keyboard shortcut.');
   await page.goto('/');
-  await page.getByRole('button', { name: 'Paper tint' }).click();
+  await expect(page.locator('[data-tint]')).toHaveCount(0);
+  await page.locator('body').click({ position: { x: 5, y: 300 } });
+  await page.keyboard.press('t');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'paper');
   await page.goto('/projects/');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'paper');
-  await expect(page.getByRole('button', { name: 'Paper tint' })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
 });
 
 test('the home page shows the photo above the fold', async ({ page }) => {
@@ -307,4 +302,32 @@ test('school logos are shown with accessible names, and the GitHub mark links ou
   await expect(
     page.locator('a[href="https://github.com/Polluxgnr"] [role="img"][aria-label="GitHub"]'),
   ).toHaveCount(1);
+  await expect(
+    page.locator('a[href*="linkedin.com/in/polluxgronier"] [role="img"][aria-label="LinkedIn"]'),
+  ).toHaveCount(1);
+  // The school tiles link to the schools themselves.
+  await page.goto('/');
+  await expect(page.locator('a[href="https://www.essec.edu/"]')).toHaveCount(1);
+});
+
+test('the privacy page exists in both languages and says what the site records', async ({
+  page,
+}) => {
+  await page.goto('/privacy/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacy');
+  await expect(page.locator('main')).toContainText('no cookies');
+  await page.goto('/fr/privacy/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Confidentialité');
+  await expect(page.locator('main')).toContainText('aucun cookie');
+});
+
+test('visit counting is off by default: no counter attribute, no counter request', async ({
+  page,
+}) => {
+  const requests: string[] = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('body')).not.toHaveAttribute('data-stats', /.+/);
+  expect(requests.filter((url) => url.includes('goatcounter'))).toEqual([]);
 });

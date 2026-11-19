@@ -50,10 +50,12 @@ const stats = [
 <section class="section wrap" aria-labelledby="stats-title">
   <div class="section-head">
     <h2 id="stats-title" data-words>
-      {fr ? 'Des chiffres, avec les preuves' : 'Numbers, with receipts'}
+      {fr ? 'Quelques chiffres' : 'A few numbers'}
     </h2>
     <p class="note">
-      {fr ? 'Chacun renvoie à sa source.' : 'Each one links to where it comes from.'}
+      {fr
+        ? 'Cliquez sur l’un d’eux pour voir d’où il sort.'
+        : 'Click one to see where it comes from.'}
     </p>
   </div>
   <ul class="stats" role="list" data-reveal-group>

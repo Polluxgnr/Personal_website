@@ -2,19 +2,18 @@
  * Prints the built /cv/ pages to A4 PDFs, so the downloadable CV is always
  * generated from the same data as the site. Run after `astro build`.
  */
-import { mkdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
 import { serveDist } from './serve-dist.ts';
 
-const pages = [
-  { path: '/cv/', out: 'dist/cv/pollux-gronier-cv-en.pdf' },
-  { path: '/fr/cv/', out: 'dist/cv/pollux-gronier-cv-fr.pdf' },
-];
+const pages = [{ path: '/fr/cv/', out: 'dist/cv/pollux-gronier-cv-fr.pdf' }];
 
 const { url, server } = await serveDist('dist');
 const browser = await chromium.launch();
 try {
   await mkdir('dist/cv', { recursive: true });
+  // The English download is my own hand-made CV (contact details removed); French is printed from the site data.
+  await copyFile('assets-src/cv-pollux-gronier-en.pdf', 'dist/cv/pollux-gronier-cv-en.pdf');
   const page = await browser.newPage();
   await page.emulateMedia({ media: 'print', colorScheme: 'light' });
   for (const { path, out } of pages) {

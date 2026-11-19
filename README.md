@@ -6,12 +6,12 @@ Source of my personal site, in English and French: a home page, every project wi
 
 ## What's in it
 
-- **One design in three tints.** A switcher in the header changes the whole palette (night, paper, abyss) through CSS custom properties; the choice is remembered and applied before first paint.
+- **One design in three tints.** Orange on black is the look; a secret shortcut (press T) cycles through two other tints (paper, abyss) through CSS custom properties. The choice is remembered and applied before first paint.
 - **A motion layer, no framework.** [Motion](https://motion.dev) runs the masked headline, word-by-word headings, staggered entrances, magnetic buttons, a reading-progress bar and a scroll drift on the portrait ([`src/scripts/motion.ts`](src/scripts/motion.ts)). Pages cross-fade with native cross-document view transitions, and a project's title travels from the list to its own page. Everything respects reduced motion and nothing stays hidden if the script fails.
 - **An interactive background.** A dot grid on a canvas that swells and lights up near the cursor, ripples on click, drifts on its own on touch screens, and is a still grid with reduced motion. It reads its colours from the active tint and sleeps when nothing moves ([`src/scripts/background.ts`](src/scripts/background.ts)).
 - **Why and how, per project.** Every project says why it exists and how it works as ordered steps, with tool logos from [Simple Icons](https://simpleicons.org) (CC0, resolved at build time). Content comes from each README; the weekly AI sync writes the same fields for new projects.
 - **Security.** See [`SECURITY.md`](SECURITY.md): strict CSP with hashes, no third-party code at runtime (a test fails if the page calls another origin), Actions pinned to commit SHAs, CodeQL, dependency review, `npm audit` in CI, `security.txt`.
-- **One data source for the site and the CV.** [`src/data/profile.json`](src/data/profile.json) and [`src/data/projects.json`](src/data/projects.json) are validated with Zod at build time. The CV page is printed to an A4 PDF by headless Chromium after every build, and the build fails if it spills onto a second page.
+- **One data source for the site and the CV.** [`src/data/profile.json`](src/data/profile.json) and [`src/data/projects.json`](src/data/projects.json) are validated with Zod at build time. The French CV page is printed to an A4 PDF by headless Chromium after every build (the English download is my own hand-made PDF, [`assets-src/`](assets-src), with my contact details removed), and the build fails if it spills onto a second page.
 - **Project cards that keep themselves up to date.** Every Monday a GitHub Action lists my public repositories. For a new repository, or one whose README changed, it asks an LLM (Anthropic API, structured output validated against the same schema) to write the card in both languages from the README alone, then opens a pull request. Nothing goes live until I merge it. The selection rules are pure functions with unit tests ([`src/lib/sync.ts`](src/lib/sync.ts)).
 - **A contact form instead of a public email or phone number.** The site stays fully static on GitHub Pages: the form posts to [Web3Forms](https://web3forms.com), which emails me the message. Its access key only identifies my inbox and is public by design. A hidden honeypot field drops naive bots, and the page reports plainly when a message did not go out.
 
@@ -52,6 +52,15 @@ npm run dev                        # http://localhost:4321
 ### Lighthouse runs in CI only
 
 Do not run `lhci` (or anything that starts the installed Google Chrome with a fresh profile) on this Windows machine. Each fresh Chrome profile checks whether the Windows password is blank by attempting a sign-in with an empty password, and that counts as a failed sign-in: twelve Lighthouse runs in a row lock the Windows account for 10 minutes. Lighthouse therefore only runs in GitHub Actions ([`.github/lighthouserc.json`](.github/lighthouserc.json)). Playwright's bundled Chromium, used by `npm run build` and `npm run test:e2e`, was checked and does not trigger it.
+
+## Visit stats
+
+The site can count visits with [GoatCounter](https://www.goatcounter.com): free, no cookies, no stored IP addresses. It shows where visitors came from, their browser and operating system (so phone or computer), country, and the hour. It is off until a site code is set:
+
+1. Create a free account at goatcounter.com and pick a site code, for example `pollux` (your dashboard is then `pollux.goatcounter.com`).
+2. Put the code in [`src/analytics.config.json`](src/analytics.config.json) (or set the `PUBLIC_GOATCOUNTER` variable) and deploy. The privacy page, the footer line and the Content-Security-Policy follow by themselves.
+
+Nothing is counted from localhost, from browsers sending "Do Not Track", or from obvious bots. To know _who_ sent a visit, tag the links you share: a visit to `https://polluxgronier.me/?src=linkedin` shows up with the source `linkedin`. Suggested tags: `?src=linkedin` (LinkedIn website field), `?src=github` (GitHub profile), `?src=mail` (email signature), `?src=family`. The CV's own link is already tagged `?src=cv`.
 
 ## Editing content
 

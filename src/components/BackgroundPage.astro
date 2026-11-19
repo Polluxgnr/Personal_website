@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Flow from './Flow.astro';
 import Timeline from './Timeline.astro';
+import portrait from '../assets/path-portrait.jpg';
 import { profile } from '../lib/data.ts';
 import { associations, educationItems, experienceItems, work } from '../lib/timeline.ts';
 import { pick, useTranslations, type Lang } from '../i18n/ui.ts';
@@ -13,9 +14,9 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const sections = [
-  { id: 'experience', title: t('exp.title'), items: experienceItems(work, lang) },
-  { id: 'associations', title: t('assoc.title'), items: experienceItems(associations, lang) },
-  { id: 'education', title: t('edu.title'), items: educationItems(lang) },
+  { id: 'experience', title: t('about.work'), items: experienceItems(work, lang) },
+  { id: 'associations', title: t('about.assoc'), items: experienceItems(associations, lang) },
+  { id: 'education', title: t('about.edu'), items: educationItems(lang) },
 ];
 const toc = [
   { id: 'path', title: t('bg.path') },
@@ -49,7 +50,15 @@ const toc = [
       </h2>
       <Flow
         label={t('bg.path')}
-        steps={profile.journey.map((j) => ({
+        steps={profile.journey.map((j, i) => ({
+          // The picture sits on the Paris stop: where I am now.
+          image: i === 3 ? portrait : undefined,
+          imageAlt:
+            i === 3
+              ? lang === 'fr'
+                ? 'Pollux Gronier, aujourd’hui'
+                : 'Pollux Gronier, today'
+              : undefined,
           title: pick(j.title, lang),
           detail: pick(j.text, lang),
           tag: j.when,

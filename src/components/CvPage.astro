@@ -47,7 +47,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
         </div>
         <ul class="contact">
           <li>
-            <a href={`${profile.links.site}${localizePath('/', lang)}#contact`}>
+            <a href={`${profile.links.site}${localizePath('/contact/', lang)}?src=cv`}>
               {t('cv.contact')}
             </a>
           </li>
@@ -176,6 +176,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
     margin: 1rem auto;
     padding-inline: 1rem;
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-size: 1rem;
   }
   .sheet {
@@ -203,6 +204,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
   }
   .role {
     font-family: var(--font-display);
+    font-stretch: 125%;
     color: var(--lagoon);
     font-weight: 500;
     margin-top: 1mm;
@@ -212,6 +214,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
     padding: 0;
     text-align: right;
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-size: 9pt;
   }
   .summary {
@@ -234,6 +237,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
   }
   .line strong {
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-weight: 650;
   }
   .when {
@@ -241,6 +245,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
     margin-left: 1em;
     color: var(--muted);
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
@@ -254,6 +259,7 @@ const canonical = new URL(localizePath('/cv/', lang), Astro.site);
   .skill strong {
     color: var(--ink);
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-weight: 600;
   }
   .two {

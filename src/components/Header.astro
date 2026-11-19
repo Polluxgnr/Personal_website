@@ -10,7 +10,6 @@ interface Props {
 const { lang, path } = Astro.props;
 const t = useTranslations(lang);
 const other = otherLang(lang);
-const fr = lang === 'fr';
 
 const items = [
   { path: '/projects/', label: t('nav.projects') },
@@ -20,11 +19,6 @@ const items = [
 ];
 // A project page belongs to the Projects section.
 const isCurrent = (itemPath: string) => path === itemPath || path.startsWith(itemPath);
-const tints = [
-  { id: 'night', label: fr ? 'Teinte nuit' : 'Night tint' },
-  { id: 'paper', label: fr ? 'Teinte papier' : 'Paper tint' },
-  { id: 'abyss', label: fr ? 'Teinte abysse' : 'Abyss tint' },
-];
 ---
 
 <header class="site-header">
@@ -58,14 +52,6 @@ const tints = [
       </ul>
     </nav>
 
-    <div class="tints" role="group" aria-label={fr ? 'Couleur du site' : 'Site colour'}>
-      {tints.map((tint) => (
-        <button type="button" data-tint={tint.id} aria-label={tint.label} aria-pressed="false">
-          <span />
-        </button>
-      ))}
-    </div>
-
     {/* On small screens the same links sit behind a native disclosure, which works without JavaScript. */}
     <details class="mobile">
       <summary>{t('nav.menu')}</summary>
@@ -93,26 +79,7 @@ const tints = [
 </header>
 
 <script>
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-tint]')];
-  const mark = () => {
-    const current = document.documentElement.dataset.theme ?? 'night';
-    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.tint === current));
-  };
-  for (const b of buttons) {
-    b.addEventListener('click', () => {
-      const tint = b.dataset.tint ?? 'night';
-      document.documentElement.dataset.theme = tint;
-      try {
-        localStorage.setItem('tint', tint);
-      } catch {
-        // Private mode: the tint simply lasts for this page.
-      }
-      mark();
-    });
-  }
-  mark();
-
-  // Press T to cycle through the tints.
+  // Secret shortcut: press T to switch between the orange-on-black and the other tints.
   const order = ['night', 'paper', 'abyss'];
   addEventListener('keydown', (event) => {
     if (event.key.toLowerCase() !== 't' || event.ctrlKey || event.metaKey || event.altKey) return;
@@ -120,7 +87,12 @@ const tints = [
     if (target?.closest('input, textarea, select, [contenteditable]')) return;
     const current = document.documentElement.dataset.theme ?? 'night';
     const next = order[(order.indexOf(current) + 1) % order.length] ?? 'night';
-    buttons.find((b) => b.dataset.tint === next)?.click();
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem('tint', next);
+    } catch {
+      // Private mode: the tint simply lasts for this page.
+    }
   });
 </script>
 
@@ -143,6 +115,7 @@ const tints = [
   .name {
     margin-right: auto;
     font-family: var(--font-display);
+    font-stretch: 125%;
     font-weight: 700;
     font-size: 0.95rem;
     letter-spacing: -0.01em;
@@ -183,43 +156,6 @@ const tints = [
   .desktop a[aria-current='page']::after {
     transform: scaleX(1);
     transform-origin: left;
-  }
-
-  .tints {
-    display: flex;
-    gap: 0.35rem;
-  }
-  .tints button {
-    display: grid;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
-  }
-  .tints span {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    transition: transform 200ms var(--ease-out);
-  }
-  .tints [data-tint='night'] span {
-    background: #ff5a1f;
-  }
-  .tints [data-tint='paper'] span {
-    background: #1d3dff;
-  }
-  .tints [data-tint='abyss'] span {
-    background: #5eead4;
-  }
-  .tints button:hover span {
-    transform: scale(1.25);
-  }
-  .tints button[aria-pressed='true'] {
-    background: var(--surface-2);
   }
 
   .mobile {

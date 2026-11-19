@@ -15,6 +15,7 @@ I'll reply within a few days. Thank you for looking.
 
 - **Content-Security-Policy** (generated at build time with script and style hashes): no `unsafe-inline`, no `unsafe-eval`, requests only to the site itself and to the Web3Forms API, no frames, no plugins, `upgrade-insecure-requests`.
 - **No third-party code on the page.** Fonts, icons and animation libraries are bundled with the site, so no CDN can change what runs in your browser. A test fails the build if the page makes a request to any other origin.
+- **Visit counting** (when a site code is set) uses GoatCounter: no cookies, no stored IP addresses, no scripts from them (the page sends a single request), and the CSP allows only that one origin. See the [privacy page](https://polluxgronier.me/privacy/).
 - **Strict referrer policy** and HTTPS enforced by GitHub Pages.
 - **Supply chain:** every GitHub Action is pinned to a full commit SHA, workflows run with read-only permissions unless a job needs more, Dependabot proposes monthly updates, `npm audit` runs in CI, and a dependency review runs on pull requests.
 - **Code scanning:** CodeQL on every push, every pull request and weekly.

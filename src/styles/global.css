@@ -1,4 +1,4 @@
-@import '@fontsource-variable/unbounded/wght.css';
+@import '@fontsource-variable/archivo/wdth.css';
 @import '@fontsource-variable/hanken-grotesk/wght.css';
 
 @layer reset, tokens, base, layout, components, utilities;
@@ -77,14 +77,14 @@
   }
 
   :root {
-    --font-display: 'Unbounded Variable', 'Arial Black', system-ui, sans-serif;
+    --font-display: 'Archivo Variable', 'Arial Black', system-ui, sans-serif;
     --font-text: 'Hanken Grotesk Variable', 'Helvetica Neue', Arial, sans-serif;
 
     --step-small: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
     --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
     --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
     --step-head: clamp(2rem, 1.2rem + 3.6vw, 4.5rem);
-    --step-display: clamp(2.75rem, 0.6rem + 8vw, 8.5rem);
+    --step-display: clamp(2rem, 0.2rem + 8.2vw, 8.5rem);
 
     --margin: clamp(1.25rem, 0.5rem + 2.6vw, 3rem);
     --section-gap: clamp(6rem, 4rem + 8vw, 12rem);
@@ -123,10 +123,12 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-stretch: 125%;
+    font-weight: 900;
     line-height: 1;
     letter-spacing: -0.02em;
     text-wrap: balance;
+    overflow-wrap: anywhere;
   }
   h1 {
     font-size: var(--step-head);

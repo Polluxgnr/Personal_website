@@ -22,7 +22,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', fr: 'fr' } },
-      filter: (page) => !page.includes('/cv/'),
+      filter: (page) => !page.includes('/cv-print/'),
     }),
   ],
   // Links are fetched in the background as they scroll into view, so a click feels instant.

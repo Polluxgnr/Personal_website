@@ -127,6 +127,9 @@ test('both CV PDFs are served', async ({ request }) => {
     const res = await request.get(`/cv/pollux-gronier-cv-${lang}.pdf`);
     expect(res.status()).toBe(200);
     expect(res.headers()['content-type']).toContain('pdf');
+    // No hidden mail link or address may ride along in the file.
+    const raw = (await res.body()).toString('latin1');
+    expect(raw).not.toMatch(/mailto:|yahoo|student-cs|@gmail/i);
   }
 });
 
@@ -287,9 +290,7 @@ test('links carry a proper share image in both languages', async ({ page, reques
   }
 });
 
-test('school logos are shown with accessible names, and the GitHub mark links out', async ({
-  page,
-}) => {
+test('school logos are shown with accessible names and link to the schools', async ({ page }) => {
   await page.goto('/');
   for (const name of [
     'CentraleSupélec',
@@ -300,12 +301,8 @@ test('school logos are shown with accessible names, and the GitHub mark links ou
     await expect(page.getByRole('img', { name })).toHaveCount(1);
   }
   await page.goto('/contact/');
-  await expect(
-    page.locator('a[href="https://github.com/Polluxgnr"] [role="img"][aria-label="GitHub"]'),
-  ).toHaveCount(1);
-  await expect(
-    page.locator('a[href*="linkedin.com/in/polluxgronier"] [role="img"][aria-label="LinkedIn"]'),
-  ).toHaveCount(1);
+  await expect(page.locator('main a[href="https://github.com/Polluxgnr"]')).toHaveCount(1);
+  await expect(page.locator('main a[href*="linkedin.com/in/polluxgronier"]')).toHaveCount(1);
   // The school tiles link to the schools themselves.
   await page.goto('/');
   await expect(page.locator('a[href="https://www.essec.edu/"]')).toHaveCount(1);

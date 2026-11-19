@@ -1,5 +1,4 @@
 ---
-import { statsCode } from '../config.ts';
 import { profile } from '../lib/data.ts';
 import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
 
@@ -15,14 +14,7 @@ const fr = lang === 'fr';
 
 <footer class="site-footer">
   <p>
-    © {year} {profile.name}.{' '}
-    {statsCode
-      ? fr
-        ? 'Écrit à la main, très testé. Un compteur de visites sans cookie, sans pub.'
-        : 'Hand-written, heavily tested. One cookie-free visit counter, no ads.'
-      : fr
-        ? 'Écrit à la main, très testé, zéro traceur.'
-        : 'Hand-written, heavily tested, zero trackers.'}
+    © {year} {profile.name}
   </p>
   <p class="hint">
     {fr

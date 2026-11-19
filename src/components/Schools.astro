@@ -1,7 +1,8 @@
 ---
 /**
- * Where I study: one tile per school, each linking to the school's own site.
- * The exchange semester is the highlighted wide tile.
+ * Where I study: CentraleSupélec and ESSEC are the two main tiles (the AIDAMS
+ * bachelor is run by both), then Paris-Saclay and the UC3M exchange semester.
+ * Each tile links to the school's own site.
  */
 import Logo from './Logo.astro';
 import type { Lang } from '../i18n/ui.ts';
@@ -12,20 +13,26 @@ interface Props {
 
 const { lang } = Astro.props;
 const fr = lang === 'fr';
+const bachelor = fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028';
 
-const schools = [
+const main = [
   {
     logo: 'centralesupelec',
     name: 'CentraleSupélec',
     href: 'https://www.centralesupelec.fr/',
-    text: fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028',
+    text: bachelor,
+    note: fr ? 'Ingénierie, maths et informatique.' : 'Engineering, maths and computer science.',
   },
   {
     logo: 'essec',
     name: 'ESSEC Business School',
     href: 'https://www.essec.edu/',
-    text: fr ? 'Bachelor AIDAMS, 2024 à 2028' : 'AIDAMS bachelor, 2024 to 2028',
+    text: bachelor,
+    note: fr ? 'Management, finance et économie.' : 'Management, finance and economics.',
   },
+] as const;
+
+const side = [
   {
     logo: 'paris-saclay',
     name: 'Université Paris-Saclay',
@@ -33,21 +40,41 @@ const schools = [
     text: fr
       ? 'L’université dont fait partie CentraleSupélec'
       : 'The university CentraleSupélec belongs to',
+    exchange: false,
+  },
+  {
+    logo: 'uc3m',
+    name: 'Universidad Carlos III de Madrid',
+    href: 'https://www.uc3m.es/',
+    text: fr
+      ? 'Semestre d’échange dans la faculté d’ingénierie à l’UC3M, à Madrid, de janvier à mai 2027'
+      : 'Exchange semester in UC3M’s School of Engineering, in Madrid, January to May 2027',
+    exchange: true,
   },
 ] as const;
-
-const exchange = {
-  name: 'Universidad Carlos III de Madrid',
-  href: 'https://www.uc3m.es/',
-  text: fr
-    ? 'Semestre d’échange dans la faculté d’ingénierie à l’UC3M, à Madrid, de janvier à mai 2027'
-    : 'Exchange semester in UC3M’s School of Engineering, in Madrid, January to May 2027',
-};
 ---
 
 <div class="schools" data-reveal-group>
-  {schools.map((s) => (
-    <a class="tile" href={s.href} rel="noopener" data-reveal>
+  {main.map((s) => (
+    <a class="tile main" href={s.href} rel="noopener" data-reveal>
+      <Logo name={s.logo} label={s.name} />
+      <span class="text">
+        <span class="name">{s.name}</span>
+        <span class="what">{s.text}</span>
+        <span class="what">{s.note}</span>
+      </span>
+      <span class="arrow" aria-hidden="true">
+        ↗
+      </span>
+    </a>
+  ))}
+  {side.map((s) => (
+    <a
+      class:list={['tile', 'side', { exchange: s.exchange }]}
+      href={s.href}
+      rel="noopener"
+      data-reveal
+    >
       <Logo name={s.logo} label={s.name} />
       <span class="text">
         <span class="name">{s.name}</span>
@@ -58,16 +85,6 @@ const exchange = {
       </span>
     </a>
   ))}
-  <a class="tile exchange" href={exchange.href} rel="noopener" data-reveal>
-    <Logo name="uc3m" label={exchange.name} />
-    <span class="text">
-      <span class="name">{exchange.name}</span>
-      <span class="what">{exchange.text}</span>
-    </span>
-    <span class="arrow" aria-hidden="true">
-      ↗
-    </span>
-  </a>
 </div>
 
 <style>
@@ -78,13 +95,7 @@ const exchange = {
   }
   @media (min-width: 48rem) {
     .schools {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    .exchange {
-      grid-column: 1 / -1;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 2rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   .tile {
@@ -92,7 +103,6 @@ const exchange = {
     display: grid;
     gap: 1.5rem;
     align-content: space-between;
-    min-height: 11rem;
     padding: clamp(1.25rem, 2.2vw, 1.75rem);
     border-radius: 1.25rem;
     background: var(--surface);
@@ -105,13 +115,24 @@ const exchange = {
     transform: translateY(-3px);
     background: var(--surface-2);
   }
-  .exchange {
-    min-height: 0;
-    background: var(--accent);
-    color: var(--accent-ink);
+  .main {
+    --k: 1.5;
+    min-height: clamp(15rem, 24vw, 20rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
   }
+  .main .name {
+    font-size: var(--step-lead);
+  }
+  .side {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem;
+    --k: 0.8;
+  }
+  .exchange,
   .exchange:hover {
     background: var(--accent);
+    color: var(--accent-ink);
   }
   .text {
     display: grid;
@@ -136,10 +157,13 @@ const exchange = {
     font-size: 1.25rem;
     transition: transform 260ms var(--ease-out);
   }
-  .exchange .arrow {
-    position: static;
-  }
   .tile:hover .arrow {
     transform: translate(3px, -3px);
+  }
+  @media (max-width: 40rem) {
+    .side {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 </style>

@@ -67,7 +67,7 @@ test('home page shows the profile and links to GitHub and LinkedIn', async ({ pa
   await expect(
     page.locator('a[href="https://www.linkedin.com/in/polluxgronier"]').first(),
   ).toBeVisible();
-  await expect(page.locator('main a[href="https://github.com/Polluxgnr"]').first()).toBeVisible();
+  await expect(page.locator('a[href="https://github.com/Polluxgnr"]').first()).toBeVisible();
   await expect(page.locator('meta[http-equiv="content-security-policy"]')).toHaveCount(1);
 });
 

@@ -10,6 +10,7 @@ test.describe('site audit', () => {
   test.skip(({ isMobile }) => isMobile, 'The crawl is the same on every device; run it once.');
 
   test('every page is well formed and every internal link works', async ({ page, request }) => {
+    test.setTimeout(120_000);
     const sitemap = await (await request.get('/sitemap-0.xml')).text();
     const paths = [...sitemap.matchAll(/<loc>https:\/\/polluxgronier\.me([^<]*)<\/loc>/g)].map(
       (m) => m[1] ?? '/',

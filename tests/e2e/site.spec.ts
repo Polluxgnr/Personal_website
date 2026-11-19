@@ -1,6 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import contactConfig from '../../src/contact.config.json' with { type: 'json' };
+import analyticsConfig from '../../src/analytics.config.json' with { type: 'json' };
 
 const pages = [
   '/',
@@ -321,13 +322,18 @@ test('the privacy page exists in both languages and says what the site records',
   await expect(page.locator('main')).toContainText('aucun cookie');
 });
 
-test('visit counting is off by default: no counter attribute, no counter request', async ({
+test('visit counting follows the configured code and never fires from localhost', async ({
   page,
 }) => {
   const requests: string[] = [];
   page.on('request', (request) => requests.push(request.url()));
   await page.goto('/');
   await page.waitForLoadState('networkidle');
-  await expect(page.locator('body')).not.toHaveAttribute('data-stats', /.+/);
+  if (analyticsConfig.goatcounter) {
+    await expect(page.locator('body')).toHaveAttribute('data-stats', analyticsConfig.goatcounter);
+  } else {
+    await expect(page.locator('body')).not.toHaveAttribute('data-stats', /.+/);
+  }
+  // Local visits are never counted, so no request goes to the counter while testing.
   expect(requests.filter((url) => url.includes('goatcounter'))).toEqual([]);
 });

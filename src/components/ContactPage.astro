@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Logo from './Logo.astro';
+import { siGithub } from 'simple-icons';
 import { contact } from '../config.ts';
 import { profile } from '../lib/data.ts';
 import { localizePath, useTranslations, type Lang } from '../i18n/ui.ts';
@@ -33,12 +33,24 @@ const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site
         <ul class="channels">
           <li>
             <a href={profile.links.linkedin} rel="me noopener">
-              <Logo name="linkedin" label="LinkedIn" />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect width="24" height="24" rx="4" fill="currentColor" />
+                <circle cx="6.3" cy="6.7" r="1.8" fill="var(--cut)" />
+                <rect x="4.7" y="9.5" width="3.2" height="9.5" fill="var(--cut)" />
+                <path
+                  d="M10.2 9.5h3v1.3c.5-.9 1.6-1.5 3-1.5 2.6 0 3.4 1.7 3.4 4V19h-3.2v-5c0-1.2-.4-2-1.5-2-1.2 0-1.5.9-1.5 2v5h-3.2z"
+                  fill="var(--cut)"
+                />
+              </svg>
+              <span>LinkedIn</span>
             </a>
           </li>
           <li>
             <a href={profile.links.github} rel="me noopener">
-              <Logo name="github" label="GitHub" />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d={siGithub.path} />
+              </svg>
+              <span>GitHub</span>
             </a>
           </li>
         </ul>
@@ -195,16 +207,29 @@ const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site
     list-style: none;
   }
   .channels a {
-    display: grid;
-    place-items: center;
-    padding: 1.1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    --cut: var(--surface);
+    width: 12.5rem;
+    height: 4.5rem;
+    padding-inline: 1.25rem;
     border-radius: 1rem;
     background: var(--surface);
+    font-weight: 700;
+    font-size: var(--step-lead);
+    text-decoration: none;
     transition:
       transform 260ms var(--ease-out),
       background-color 260ms var(--ease);
   }
+  .channels svg {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+  }
   .channels a:hover {
+    --cut: var(--surface-2);
     transform: translateY(-3px);
     background: var(--surface-2);
   }

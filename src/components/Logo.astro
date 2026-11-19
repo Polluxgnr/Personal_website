@@ -5,7 +5,7 @@
  * Logos belong to their institutions and are shown only to say where I study.
  */
 interface Props {
-  name: 'centralesupelec' | 'paris-saclay' | 'essec' | 'uc3m' | 'github' | 'linkedin';
+  name: 'centralesupelec' | 'paris-saclay' | 'essec' | 'uc3m';
   /** Accessible name: the institution's name. */
   label: string;
 }
@@ -28,39 +28,27 @@ const { name, label } = Astro.props;
     transition: opacity 240ms var(--ease);
   }
   .centralesupelec {
-    height: 3.5rem;
+    height: calc(3.5rem * var(--k, 1));
     aspect-ratio: 618 / 320;
     mask-image: url('../assets/logos/centralesupelec.webp');
     -webkit-mask-image: url('../assets/logos/centralesupelec.webp');
   }
   .paris-saclay {
-    height: 3.25rem;
+    height: calc(3.25rem * var(--k, 1));
     aspect-ratio: 884 / 311;
     mask-image: url('../assets/logos/paris-saclay.webp');
     -webkit-mask-image: url('../assets/logos/paris-saclay.webp');
   }
   .essec {
-    height: 4.25rem;
+    height: calc(4.25rem * var(--k, 1));
     aspect-ratio: 343 / 320;
     mask-image: url('../assets/logos/essec.webp');
     -webkit-mask-image: url('../assets/logos/essec.webp');
   }
   .uc3m {
-    height: 3.5rem;
+    height: calc(3.5rem * var(--k, 1));
     aspect-ratio: 1057 / 314;
     mask-image: url('../assets/logos/uc3m.webp');
     -webkit-mask-image: url('../assets/logos/uc3m.webp');
-  }
-  .linkedin {
-    height: 3.2rem;
-    aspect-ratio: 717 / 259;
-    mask-image: url('../assets/logos/linkedin.webp');
-    -webkit-mask-image: url('../assets/logos/linkedin.webp');
-  }
-  .github {
-    height: 2.5rem;
-    aspect-ratio: 1126 / 259;
-    mask-image: url('../assets/logos/github.webp');
-    -webkit-mask-image: url('../assets/logos/github.webp');
   }
 </style>

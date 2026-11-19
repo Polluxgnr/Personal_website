@@ -21,92 +21,94 @@ const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site
   title={t('contact.title')}
   description={t('contact.description')}
 >
-  <section class="wrap page grid" aria-labelledby="contact-title">
-    <div class="intro">
-      <h1 id="contact-title" data-words>
-        {t('contact.title')}
-      </h1>
-      <p class="lede">{t('contact.lede')}</p>
-      <p class="joke">{t('contact.joke')}</p>
-      <p class="elsewhere">{t('contact.elsewhere')}</p>
-      <ul class="channels">
-        <li>
-          <a href={profile.links.linkedin} rel="me">
-            LinkedIn
-          </a>
-        </li>
-        <li>
-          <a href={profile.links.github} rel="me" class="github-link">
-            <Logo name="github" label="GitHub" />
-          </a>
-        </li>
-      </ul>
-    </div>
+  <section class="wrap page" aria-labelledby="contact-title">
+    <h1 id="contact-title" data-words>
+      {t('contact.title')}
+    </h1>
+    <div class="grid">
+      <div class="intro">
+        <p class="lede">{t('contact.lede')}</p>
+        <p class="joke">{t('contact.joke')}</p>
+        <p class="elsewhere">{t('contact.elsewhere')}</p>
+        <ul class="channels">
+          <li>
+            <a href={profile.links.linkedin} rel="me noopener">
+              <Logo name="linkedin" label="LinkedIn" />
+            </a>
+          </li>
+          <li>
+            <a href={profile.links.github} rel="me noopener">
+              <Logo name="github" label="GitHub" />
+            </a>
+          </li>
+        </ul>
+      </div>
 
-    <form
-      method="post"
-      action={contact.accessKey ? contact.endpoint : undefined}
-      novalidate
-      data-contact
-      data-msg-sending={t('contact.sending')}
-      data-msg-sent={t('contact.sent')}
-      data-msg-error={t('contact.error')}
-      data-msg-invalid={t('contact.invalid')}
-      data-msg-offline={t('contact.offline')}
-    >
-      <input type="hidden" name="access_key" value={contact.accessKey} />
-      <input type="hidden" name="subject" value="polluxgronier.me: new message" />
-      <input type="hidden" name="from_name" value="polluxgronier.me" />
-      <input type="hidden" name="redirect" value={returnTo} />
-      <input type="hidden" name="lang" value={lang} />
-      <div class="pair">
-        <div class="field">
-          <label for="c-name">{t('contact.name')}</label>
-          <input id="c-name" name="name" required maxlength="100" autocomplete="name" />
+      <form
+        method="post"
+        action={contact.accessKey ? contact.endpoint : undefined}
+        novalidate
+        data-contact
+        data-msg-sending={t('contact.sending')}
+        data-msg-sent={t('contact.sent')}
+        data-msg-error={t('contact.error')}
+        data-msg-invalid={t('contact.invalid')}
+        data-msg-offline={t('contact.offline')}
+      >
+        <input type="hidden" name="access_key" value={contact.accessKey} />
+        <input type="hidden" name="subject" value="polluxgronier.me: new message" />
+        <input type="hidden" name="from_name" value="polluxgronier.me" />
+        <input type="hidden" name="redirect" value={returnTo} />
+        <input type="hidden" name="lang" value={lang} />
+        <div class="pair">
+          <div class="field">
+            <label for="c-name">{t('contact.name')}</label>
+            <input id="c-name" name="name" required maxlength="100" autocomplete="name" />
+          </div>
+          <div class="field">
+            <label for="c-email">{t('contact.email')}</label>
+            <input
+              id="c-email"
+              name="email"
+              type="email"
+              required
+              maxlength="200"
+              autocomplete="email"
+            />
+          </div>
         </div>
         <div class="field">
-          <label for="c-email">{t('contact.email')}</label>
-          <input
-            id="c-email"
-            name="email"
-            type="email"
+          <label for="c-company">{t('contact.company')}</label>
+          <input id="c-company" name="company" maxlength="120" autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="c-message">{t('contact.message')}</label>
+          <textarea
+            id="c-message"
+            name="message"
             required
-            maxlength="200"
-            autocomplete="email"
-          />
+            minlength="10"
+            maxlength="5000"
+            rows="7"
+          ></textarea>
         </div>
-      </div>
-      <div class="field">
-        <label for="c-company">{t('contact.company')}</label>
-        <input id="c-company" name="company" maxlength="120" autocomplete="organization" />
-      </div>
-      <div class="field">
-        <label for="c-message">{t('contact.message')}</label>
-        <textarea
-          id="c-message"
-          name="message"
-          required
-          minlength="10"
-          maxlength="5000"
-          rows="7"
-        ></textarea>
-      </div>
-      {/* Web3Forms honeypot: hidden from people, ticked by naive bots, which get dropped. */}
-      <input
-        type="checkbox"
-        name="botcheck"
-        class="trap"
-        tabindex="-1"
-        autocomplete="off"
-        aria-hidden="true"
-      />
-      <div class="submit">
-        <button class="button" type="submit">
-          {t('contact.send')}
-        </button>
-        <p class="message" role="status" aria-live="polite" data-contact-status></p>
-      </div>
-    </form>
+        {/* Web3Forms honeypot: hidden from people, ticked by naive bots, which get dropped. */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="trap"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+        <div class="submit">
+          <button class="button" type="submit">
+            {t('contact.send')}
+          </button>
+          <p class="message" role="status" aria-live="polite" data-contact-status></p>
+        </div>
+      </form>
+    </div>
   </section>
 </Base>
 
@@ -155,17 +157,25 @@ const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site
 <style>
   .grid {
     display: grid;
-    gap: 2.5rem var(--section-gap);
+    gap: 2rem clamp(2rem, 5vw, 4rem);
     align-items: start;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
   }
   @media (min-width: 56rem) {
     .grid {
       grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
     }
+    .intro {
+      position: sticky;
+      top: 6.5rem;
+    }
   }
   h1 {
     font-size: var(--step-display);
-    margin-bottom: 0.875rem;
+  }
+  .lede {
+    font-size: var(--step-lead);
+    line-height: 1.4;
   }
   .joke {
     margin-top: 0.75rem;
@@ -173,22 +183,30 @@ const returnTo = new URL(`${localizePath('/contact/', lang)}?sent=1`, Astro.site
     font-style: italic;
   }
   .elsewhere {
+    margin-top: 2rem;
     color: var(--muted);
   }
   .channels {
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
     padding: 0;
     list-style: none;
-    font-weight: 700;
-  }
-  .github-link {
-    display: inline-flex;
-    align-items: center;
   }
   .channels a {
-    display: inline-block;
-    padding-block: 0.4rem;
+    display: grid;
+    place-items: center;
+    padding: 1.1rem 1.5rem;
+    border-radius: 1rem;
+    background: var(--surface);
+    transition:
+      transform 260ms var(--ease-out),
+      background-color 260ms var(--ease);
+  }
+  .channels a:hover {
+    transform: translateY(-3px);
+    background: var(--surface-2);
   }
   form {
     display: grid;

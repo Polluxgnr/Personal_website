@@ -42,11 +42,11 @@ if (root.classList.contains('motion-ready')) {
   // Hero: the name rises line by line, the photo opens from the bottom, the rest fades up.
   const lines = document.querySelectorAll('[data-hero] .line > span');
   if (lines.length) {
-    animate(lines, { y: ['110%', '0%'] }, { duration: 0.8, delay: stagger(0.1), ease });
+    animate(lines, { y: ['110%', '0%'] }, { duration: 0.6, delay: stagger(0.08), ease });
     animate(
       document.querySelectorAll('[data-hero-fade]'),
       { opacity: [0, 1], y: [18, 0] },
-      { duration: 0.6, delay: stagger(0.07, { startDelay: 0.25 }), ease },
+      { duration: 0.5, delay: stagger(0.05, { startDelay: 0.15 }), ease },
     );
   }
   const photo = document.querySelector<HTMLElement>('[data-hero-photo]');
@@ -55,9 +55,9 @@ if (root.classList.contains('motion-ready')) {
     animate(
       photo,
       { clipPath: ['inset(100% 0 0 0 round 1.5rem)', 'inset(0% 0 0 0 round 1.5rem)'] },
-      { duration: 1, delay: 0.1, ease },
+      { duration: 0.8, delay: 0.05, ease },
     );
-    animate(picture, { scale: [1.25, 1.08] }, { duration: 1.4, delay: 0.1, ease });
+    animate(picture, { scale: [1.25, 1.08] }, { duration: 1.1, delay: 0.05, ease });
     // Then it drifts inside its frame as the page scrolls.
     scroll(animate(picture, { y: ['-4%', '6%'] }, { ease: 'linear' }), {
       target: photo,
@@ -74,7 +74,7 @@ if (root.classList.contains('motion-ready')) {
         animate(
           heading.querySelectorAll('.w > span'),
           { y: ['110%', '0%'] },
-          { duration: 0.75, delay: stagger(0.05), ease },
+          { duration: 0.5, delay: stagger(0.03), ease },
         );
       },
       { amount: 0.4 },
@@ -87,8 +87,9 @@ if (root.classList.contains('motion-ready')) {
     (group) => {
       animate(
         group.querySelectorAll('[data-reveal]'),
-        { opacity: [0, 1], y: [28, 0] },
-        { duration: 0.8, delay: stagger(0.06), ease },
+        { opacity: [0, 1], y: [20, 0] },
+        // Capped, so a long list never makes you wait for its last row.
+        { duration: 0.5, delay: (i: number) => Math.min(i * 0.05, 0.25), ease },
       );
     },
     { amount: 0.08 },
@@ -118,7 +119,7 @@ if (root.classList.contains('motion-ready')) {
       el,
       () => {
         animate(0, target, {
-          duration: 1.8,
+          duration: 1.2,
           ease,
           onUpdate: (value) => {
             el.textContent = format.format(Math.round(value));

@@ -127,6 +127,9 @@ test('both CV PDFs are served', async ({ request }) => {
     const res = await request.get(`/cv/pollux-gronier-cv-${lang}.pdf`);
     expect(res.status()).toBe(200);
     expect(res.headers()['content-type']).toContain('pdf');
+    // No hidden mail link or address may ride along in the file.
+    const raw = (await res.body()).toString('latin1');
+    expect(raw).not.toMatch(/mailto:|yahoo|student-cs|@gmail/i);
   }
 });
 
